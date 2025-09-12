@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ArrowUpDown } from "lucide-react"
 import { conversionEngine, type Unit, type ConversionResult } from "@/lib/conversion-engine"
 import { storageManager } from "@/lib/storage"
+import { DualInput } from "./dual-input"
 
 interface UnitConverterProps {
   selectedCategory: string
@@ -21,6 +22,27 @@ export function UnitConverter({ selectedCategory }: UnitConverterProps) {
   const [result, setResult] = useState<ConversionResult | null>(null)
   const [units, setUnits] = useState<Unit[]>([])
   const [activeInput, setActiveInput] = useState<"from" | "to">("from")
+  const [fromCompositeValues, setFromCompositeValues] = useState<string[]>(["", ""])
+  const [toCompositeValues, setToCompositeValues] = useState<string[]>(["", ""])
+
+  // Helpers to avoid infinite update loops when setting composite values
+  const setToCompositeIfChanged = useCallback((next: string[]) => {
+    setToCompositeValues((prev) => {
+      if ((prev[0] ?? "") === (next[0] ?? "") && (prev[1] ?? "") === (next[1] ?? "")) {
+        return prev
+      }
+      return next
+    })
+  }, [])
+
+  const setFromCompositeIfChanged = useCallback((next: string[]) => {
+    setFromCompositeValues((prev) => {
+      if ((prev[0] ?? "") === (next[0] ?? "") && (prev[1] ?? "") === (next[1] ?? "")) {
+        return prev
+      }
+      return next
+    })
+  }, [])
 
   // Load units for selected category
   useEffect(() => {
@@ -28,81 +50,173 @@ export function UnitConverter({ selectedCategory }: UnitConverterProps) {
       const categoryUnits = conversionEngine.getUnitsByCategory(selectedCategory as any)
       setUnits(categoryUnits)
 
-      // Set default units if none selected or if category changed
-      if (!fromUnit || !categoryUnits.find((u) => u.id === fromUnit)) {
-        setFromUnit(categoryUnits.length > 0 ? categoryUnits[0].id : "")
+      // Set default units only when category changes or units are empty
+      if (!fromUnit && categoryUnits.length > 0) {
+        setFromUnit(categoryUnits[0].id)
       }
-      if (!toUnit || !categoryUnits.find((u) => u.id === toUnit)) {
-        setToUnit(categoryUnits.length > 1 ? categoryUnits[1].id : "")
+      if (!toUnit && categoryUnits.length > 1) {
+        setToUnit(categoryUnits[1].id)
       }
     }
-  }, [selectedCategory, fromUnit, toUnit])
+  }, [selectedCategory])
+
+  // Validate units when they change - ensure they exist in current category
+  useEffect(() => {
+    if (units.length > 0) {
+      if (fromUnit && !units.find((u) => u.id === fromUnit)) {
+        setFromUnit(units[0].id)
+      }
+      if (toUnit && !units.find((u) => u.id === toUnit)) {
+        setToUnit(units.length > 1 ? units[1].id : units[0].id)
+      }
+    }
+  }, [units, fromUnit, toUnit])
 
   // Perform conversion from "from" to "to"
   const performConversionFromTo = useCallback(() => {
-    const numValue = Number.parseFloat(fromValue)
-    if (!isNaN(numValue) && fromUnit && toUnit) {
-      const conversionResult = conversionEngine.convert(numValue, fromUnit, toUnit)
-      setResult(conversionResult)
-      if (conversionResult && activeInput === "from") {
-        setToValue(conversionResult.formatted)
-      }
-
-      // Save to recents
-      if (conversionResult) {
-        storageManager.addRecent({
-          fromUnitId: fromUnit,
-          toUnitId: toUnit,
-          value: numValue,
-          result: conversionResult.value,
-        })
-      }
-    } else {
+    if (!fromUnit || !toUnit) {
       setResult(null)
-      if (activeInput === "from") {
-        setToValue("")
+      return
+    }
+
+    const fromUnitObj = units.find(u => u.id === fromUnit)
+    const toUnitObj = units.find(u => u.id === toUnit)
+
+    let conversionResult: ConversionResult | null = null
+
+    // Handle composite unit conversion
+    if (fromUnitObj?.isComposite) {
+      const values = fromCompositeValues.map(v => Number.parseFloat(v) || 0)
+      conversionResult = conversionEngine.convertComposite(values, fromUnit, toUnit)
+    } else {
+      const numValue = Number.parseFloat(fromValue)
+      if (!isNaN(numValue)) {
+        if (toUnitObj?.isComposite) {
+          conversionResult = conversionEngine.convertComposite([numValue], fromUnit, toUnit)
+        } else {
+          conversionResult = conversionEngine.convert(numValue, fromUnit, toUnit)
+        }
       }
     }
-  }, [fromValue, fromUnit, toUnit, activeInput])
 
-  // Perform conversion from "to" to "from"
-  const performConversionToFrom = useCallback(() => {
-    const numValue = Number.parseFloat(toValue)
-    if (!isNaN(numValue) && fromUnit && toUnit) {
-      const conversionResult = conversionEngine.convert(numValue, toUnit, fromUnit)
-      if (conversionResult && activeInput === "to") {
-        setFromValue(conversionResult.formatted)
+    setResult(conversionResult)
+
+    if (conversionResult && activeInput === "from") {
+      if (toUnitObj?.isComposite) {
+        // For composite units, parse the formatted result
+        if (toUnit === "ft_in" && conversionResult.formatted.includes("'")) {
+          const parts = conversionResult.formatted.split("'")
+          const feet = parts[0].trim()
+          const inches = parts[1].replace('"', '').trim()
+          setToCompositeIfChanged([feet, inches])
+        }
+      } else {
+        setToValue(conversionResult.formatted)
       }
+    }
 
-      // Save to recents
+    // Save to recents
+    if (conversionResult) {
+      const value = fromUnitObj?.isComposite ? 
+        fromCompositeValues.reduce((sum, v, i) => sum + (Number.parseFloat(v) || 0) * (i === 0 ? 12 : 1), 0) :
+        Number.parseFloat(fromValue)
+      
       storageManager.addRecent({
-        fromUnitId: toUnit,
-        toUnitId: fromUnit,
-        value: numValue,
+        fromUnitId: fromUnit,
+        toUnitId: toUnit,
+        value,
         result: conversionResult.value,
       })
     }
-  }, [toValue, fromUnit, toUnit, activeInput])
+  }, [fromValue, fromCompositeValues, fromUnit, toUnit, activeInput, units])
 
-  // Auto-convert when values change
+  // Perform conversion from "to" to "from"
+  const performConversionToFrom = useCallback(() => {
+    if (!fromUnit || !toUnit) return
+
+    const fromUnitObj = units.find(u => u.id === fromUnit)
+    const toUnitObj = units.find(u => u.id === toUnit)
+
+    let conversionResult: ConversionResult | null = null
+
+    // Handle composite unit conversion
+    if (toUnitObj?.isComposite) {
+      const values = toCompositeValues.map(v => Number.parseFloat(v) || 0)
+      conversionResult = conversionEngine.convertComposite(values, toUnit, fromUnit)
+    } else {
+      const numValue = Number.parseFloat(toValue)
+      if (!isNaN(numValue)) {
+        if (fromUnitObj?.isComposite) {
+          conversionResult = conversionEngine.convertComposite([numValue], toUnit, fromUnit)
+        } else {
+          conversionResult = conversionEngine.convert(numValue, toUnit, fromUnit)
+        }
+      }
+    }
+
+    if (conversionResult && activeInput === "to") {
+      if (fromUnitObj?.isComposite) {
+        // For composite units, parse the formatted result
+        if (fromUnit === "ft_in" && conversionResult.formatted.includes("'")) {
+          const parts = conversionResult.formatted.split("'")
+          const feet = parts[0].trim()
+          const inches = parts[1].replace('"', '').trim()
+          setFromCompositeIfChanged([feet, inches])
+        }
+      } else {
+        setFromValue(conversionResult.formatted)
+      }
+    }
+
+    // Save to recents
+    if (conversionResult) {
+      const value = toUnitObj?.isComposite ? 
+        toCompositeValues.reduce((sum, v, i) => sum + (Number.parseFloat(v) || 0) * (i === 0 ? 12 : 1), 0) :
+        Number.parseFloat(toValue)
+      
+      storageManager.addRecent({
+        fromUnitId: toUnit,
+        toUnitId: fromUnit,
+        value,
+        result: conversionResult.value,
+      })
+    }
+  }, [toValue, toCompositeValues, fromUnit, toUnit, activeInput, units])
+
+  // Auto-convert when editing the FROM side
   useEffect(() => {
-    if (activeInput === "from") {
-      performConversionFromTo()
-    } else if (activeInput === "to") {
-      performConversionToFrom()
-    }
-  }, [performConversionFromTo, performConversionToFrom, activeInput])
+    if (activeInput !== "from") return
+    performConversionFromTo()
+  }, [fromValue, fromCompositeValues, fromUnit, toUnit, activeInput, units, performConversionFromTo])
 
-  const handleSwapUnits = () => {
+  // Auto-convert when editing the TO side
+  useEffect(() => {
+    if (activeInput !== "to") return
+    performConversionToFrom()
+  }, [toValue, toCompositeValues, fromUnit, toUnit, activeInput, units, performConversionToFrom])
+
+  const handleSwapUnits = useCallback(() => {
     if (fromUnit && toUnit) {
-      setFromUnit(toUnit)
-      setToUnit(fromUnit)
-      // Swap the values as well
-      const tempValue = fromValue
-      setFromValue(toValue)
-      setToValue(tempValue)
+      // Store current values to avoid state update conflicts
+      const currentFromUnit = fromUnit
+      const currentToUnit = toUnit
+      const currentFromValue = fromValue
+      const currentToValue = toValue
+      const currentFromComposite = [...fromCompositeValues]
+      const currentToComposite = [...toCompositeValues]
+      
+      // Batch all state updates
+      setFromUnit(currentToUnit)
+      setToUnit(currentFromUnit)
+      setFromValue(currentToValue)
+      setToValue(currentFromValue)
+      setFromCompositeValues(currentToComposite)
+      setToCompositeValues(currentFromComposite)
+      
+      // Reset active input to maintain proper conversion flow
+      setActiveInput("from")
     }
-  }
+  }, [fromUnit, toUnit, fromValue, toValue, fromCompositeValues, toCompositeValues])
 
 
   const UnitSelectItem = ({ unit }: { unit: Unit }) => (
@@ -127,24 +241,36 @@ export function UnitConverter({ selectedCategory }: UnitConverterProps) {
           <div className="space-y-4">
             <label className="text-lg font-semibold text-foreground">From</label>
             <div className="space-y-3">
-              <div className="relative">
-                <Input
-                  type="number"
-                  value={fromValue}
-                  onChange={(e) => {
-                    setFromValue(e.target.value)
+              {units.find(u => u.id === fromUnit)?.isComposite ? (
+                <DualInput
+                  unit={units.find(u => u.id === fromUnit)!}
+                  values={fromCompositeValues}
+                  onChange={(values) => {
+                    setFromCompositeValues(values)
                     setActiveInput("from")
                   }}
                   onFocus={() => setActiveInput("from")}
-                  placeholder="Enter value"
-                  className="text-xl h-14 px-4 border-2 border-primary/20 focus:border-primary shadow-md bg-background/80 backdrop-blur-sm"
                 />
-                {fromUnit && (
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium text-muted-foreground bg-background/80 px-2 py-1 rounded">
-                    {units.find((u) => u.id === fromUnit)?.symbol}
-                  </div>
-                )}
-              </div>
+              ) : (
+                <div className="relative">
+                  <Input
+                    type="number"
+                    value={fromValue}
+                    onChange={(e) => {
+                      setFromValue(e.target.value)
+                      setActiveInput("from")
+                    }}
+                    onFocus={() => setActiveInput("from")}
+                    placeholder="Enter value"
+                    className="text-xl h-14 px-4 border-2 border-primary/20 focus:border-primary shadow-md bg-background/80 backdrop-blur-sm"
+                  />
+                  {fromUnit && (
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium text-muted-foreground bg-background/80 px-2 py-1 rounded">
+                      {units.find((u) => u.id === fromUnit)?.symbol}
+                    </div>
+                  )}
+                </div>
+              )}
               <Select value={fromUnit} onValueChange={setFromUnit}>
                 <SelectTrigger className="h-12 border-2 border-primary/20 focus:border-primary shadow-md">
                   <SelectValue placeholder="Select unit" />
@@ -177,24 +303,36 @@ export function UnitConverter({ selectedCategory }: UnitConverterProps) {
           <div className="space-y-4">
             <label className="text-lg font-semibold text-foreground">To</label>
             <div className="space-y-3">
-              <div className="relative">
-                <Input
-                  type="number"
-                  value={toValue}
-                  onChange={(e) => {
-                    setToValue(e.target.value)
+              {units.find(u => u.id === toUnit)?.isComposite ? (
+                <DualInput
+                  unit={units.find(u => u.id === toUnit)!}
+                  values={toCompositeValues}
+                  onChange={(values) => {
+                    setToCompositeValues(values)
                     setActiveInput("to")
                   }}
                   onFocus={() => setActiveInput("to")}
-                  placeholder="Enter value"
-                  className="text-xl h-14 px-4 border-2 border-primary/20 focus:border-primary shadow-md bg-background/80 backdrop-blur-sm"
                 />
-                {toUnit && (
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium text-muted-foreground bg-background/80 px-2 py-1 rounded">
-                    {units.find((u) => u.id === toUnit)?.symbol}
-                  </div>
-                )}
-              </div>
+              ) : (
+                <div className="relative">
+                  <Input
+                    type="number"
+                    value={toValue}
+                    onChange={(e) => {
+                      setToValue(e.target.value)
+                      setActiveInput("to")
+                    }}
+                    onFocus={() => setActiveInput("to")}
+                    placeholder="Enter value"
+                    className="text-xl h-14 px-4 border-2 border-primary/20 focus:border-primary shadow-md bg-background/80 backdrop-blur-sm"
+                  />
+                  {toUnit && (
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium text-muted-foreground bg-background/80 px-2 py-1 rounded">
+                      {units.find((u) => u.id === toUnit)?.symbol}
+                    </div>
+                  )}
+                </div>
+              )}
               <Select value={toUnit} onValueChange={setToUnit}>
                 <SelectTrigger className="h-12 border-2 border-primary/20 focus:border-primary shadow-md">
                   <SelectValue placeholder="Select unit" />
@@ -215,10 +353,26 @@ export function UnitConverter({ selectedCategory }: UnitConverterProps) {
         {result && (
           <div className="text-center p-6 bg-gradient-to-r from-primary/10 to-primary/5 rounded-xl border border-primary/20 shadow-md">
             <div className="text-xl font-medium">
-              <span className="font-bold text-2xl">{fromValue}</span>
+              {/* From value display */}
+              {units.find(u => u.id === fromUnit)?.isComposite ? (
+                <span className="font-bold text-2xl">
+                  {fromCompositeValues[0] || "0"}' {fromCompositeValues[1] || "0"}"
+                </span>
+              ) : (
+                <span className="font-bold text-2xl">{fromValue}</span>
+              )}
               <span className="mx-3 text-muted-foreground text-lg">{units.find((u) => u.id === fromUnit)?.symbol}</span>
+              
               <span className="mx-3 text-2xl">=</span>
-              <span className="font-bold text-2xl text-primary">{toValue}</span>
+              
+              {/* To value display */}
+              {units.find(u => u.id === toUnit)?.isComposite ? (
+                <span className="font-bold text-2xl text-primary">
+                  {toCompositeValues[0] || "0"}' {toCompositeValues[1] || "0"}"
+                </span>
+              ) : (
+                <span className="font-bold text-2xl text-primary">{toValue}</span>
+              )}
               <span className="mx-3 text-muted-foreground text-lg">{units.find((u) => u.id === toUnit)?.symbol}</span>
             </div>
           </div>

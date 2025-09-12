@@ -6,6 +6,12 @@ export interface Unit {
   category: UnitCategory
   toBase: (value: number) => number
   fromBase: (value: number) => number
+  isComposite?: boolean
+  compositeInputs?: {
+    name: string
+    symbol: string
+    placeholder: string
+  }[]
 }
 
 export type UnitCategory =
@@ -100,6 +106,27 @@ export class ConversionEngine {
       fromBase: (v) => v / 0.3048,
     })
     this.addUnit({
+      id: "ft_in",
+      name: "Feet & Inches",
+      symbol: "ft in",
+      category: "length",
+      toBase: (v) => v * 0.3048, // This will be overridden by composite conversion
+      fromBase: (v) => v / 0.3048, // This will be overridden by composite conversion
+      isComposite: true,
+      compositeInputs: [
+        {
+          name: "feet",
+          symbol: "ft",
+          placeholder: "Feet"
+        },
+        {
+          name: "inches",
+          symbol: "in",
+          placeholder: "Inches"
+        }
+      ]
+    })
+    this.addUnit({
       id: "yd",
       name: "Yard",
       symbol: "yd",
@@ -114,6 +141,38 @@ export class ConversionEngine {
       category: "length",
       toBase: (v) => v * 1609.344,
       fromBase: (v) => v / 1609.344,
+    })
+    this.addUnit({
+      id: "μm",
+      name: "Micrometer",
+      symbol: "μm",
+      category: "length",
+      toBase: (v) => v / 1000000,
+      fromBase: (v) => v * 1000000,
+    })
+    this.addUnit({
+      id: "nm",
+      name: "Nanometer",
+      symbol: "nm",
+      category: "length",
+      toBase: (v) => v / 1000000000,
+      fromBase: (v) => v * 1000000000,
+    })
+    this.addUnit({
+      id: "nmi",
+      name: "Nautical Mile",
+      symbol: "nmi",
+      category: "length",
+      toBase: (v) => v * 1852,
+      fromBase: (v) => v / 1852,
+    })
+    this.addUnit({
+      id: "dm",
+      name: "Decimeter",
+      symbol: "dm",
+      category: "length",
+      toBase: (v) => v / 10,
+      fromBase: (v) => v * 10,
     })
 
     // Weight units (base: kilogram)
@@ -164,6 +223,38 @@ export class ConversionEngine {
       category: "weight",
       toBase: (v) => v * 1000,
       fromBase: (v) => v / 1000,
+    })
+    this.addUnit({
+      id: "stone",
+      name: "Stone",
+      symbol: "st",
+      category: "weight",
+      toBase: (v) => v * 6.35029,
+      fromBase: (v) => v / 6.35029,
+    })
+    this.addUnit({
+      id: "grain",
+      name: "Grain",
+      symbol: "gr",
+      category: "weight",
+      toBase: (v) => v * 0.0000647989,
+      fromBase: (v) => v / 0.0000647989,
+    })
+    this.addUnit({
+      id: "carat",
+      name: "Carat",
+      symbol: "ct",
+      category: "weight",
+      toBase: (v) => v * 0.0002,
+      fromBase: (v) => v / 0.0002,
+    })
+    this.addUnit({
+      id: "troy_oz",
+      name: "Troy Ounce",
+      symbol: "oz t",
+      category: "weight",
+      toBase: (v) => v * 0.0311035,
+      fromBase: (v) => v / 0.0311035,
     })
 
     // Temperature units (base: Celsius)
@@ -265,6 +356,46 @@ export class ConversionEngine {
       toBase: (v) => v * 0.00492892,
       fromBase: (v) => v / 0.00492892,
     })
+    this.addUnit({
+      id: "m3",
+      name: "Cubic Meter",
+      symbol: "m³",
+      category: "volume",
+      toBase: (v) => v * 1000,
+      fromBase: (v) => v / 1000,
+    })
+    this.addUnit({
+      id: "cm3",
+      name: "Cubic Centimeter",
+      symbol: "cm³",
+      category: "volume",
+      toBase: (v) => v / 1000,
+      fromBase: (v) => v * 1000,
+    })
+    this.addUnit({
+      id: "ft3",
+      name: "Cubic Foot",
+      symbol: "ft³",
+      category: "volume",
+      toBase: (v) => v * 28.3168,
+      fromBase: (v) => v / 28.3168,
+    })
+    this.addUnit({
+      id: "in3",
+      name: "Cubic Inch",
+      symbol: "in³",
+      category: "volume",
+      toBase: (v) => v * 0.0163871,
+      fromBase: (v) => v / 0.0163871,
+    })
+    this.addUnit({
+      id: "barrel",
+      name: "Barrel (US)",
+      symbol: "bbl",
+      category: "volume",
+      toBase: (v) => v * 158.987,
+      fromBase: (v) => v / 158.987,
+    })
 
     // Time units (base: second)
     this.addUnit({
@@ -322,6 +453,114 @@ export class ConversionEngine {
       category: "time",
       toBase: (v) => v * 31536000, // 365 days
       fromBase: (v) => v / 31536000,
+    })
+
+    // Area units (base: square meter)
+    this.addUnit({
+      id: "m2",
+      name: "Square Meter",
+      symbol: "m²",
+      category: "area",
+      toBase: (v) => v,
+      fromBase: (v) => v,
+    })
+    this.addUnit({
+      id: "cm2",
+      name: "Square Centimeter",
+      symbol: "cm²",
+      category: "area",
+      toBase: (v) => v / 10000,
+      fromBase: (v) => v * 10000,
+    })
+    this.addUnit({
+      id: "km2",
+      name: "Square Kilometer",
+      symbol: "km²",
+      category: "area",
+      toBase: (v) => v * 1000000,
+      fromBase: (v) => v / 1000000,
+    })
+    this.addUnit({
+      id: "in2",
+      name: "Square Inch",
+      symbol: "in²",
+      category: "area",
+      toBase: (v) => v * 0.00064516,
+      fromBase: (v) => v / 0.00064516,
+    })
+    this.addUnit({
+      id: "ft2",
+      name: "Square Foot",
+      symbol: "ft²",
+      category: "area",
+      toBase: (v) => v * 0.092903,
+      fromBase: (v) => v / 0.092903,
+    })
+    this.addUnit({
+      id: "yd2",
+      name: "Square Yard",
+      symbol: "yd²",
+      category: "area",
+      toBase: (v) => v * 0.836127,
+      fromBase: (v) => v / 0.836127,
+    })
+    this.addUnit({
+      id: "acre",
+      name: "Acre",
+      symbol: "ac",
+      category: "area",
+      toBase: (v) => v * 4046.86,
+      fromBase: (v) => v / 4046.86,
+    })
+    this.addUnit({
+      id: "hectare",
+      name: "Hectare",
+      symbol: "ha",
+      category: "area",
+      toBase: (v) => v * 10000,
+      fromBase: (v) => v / 10000,
+    })
+
+    // Speed units (base: meter per second)
+    this.addUnit({
+      id: "mps",
+      name: "Meter per Second",
+      symbol: "m/s",
+      category: "speed",
+      toBase: (v) => v,
+      fromBase: (v) => v,
+    })
+    this.addUnit({
+      id: "kmh",
+      name: "Kilometer per Hour",
+      symbol: "km/h",
+      category: "speed",
+      toBase: (v) => v / 3.6,
+      fromBase: (v) => v * 3.6,
+    })
+    this.addUnit({
+      id: "mph",
+      name: "Mile per Hour",
+      symbol: "mph",
+      category: "speed",
+      toBase: (v) => v * 0.44704,
+      fromBase: (v) => v / 0.44704,
+    })
+    this.addUnit({
+      id: "fps",
+      name: "Foot per Second",
+      symbol: "ft/s",
+      category: "speed",
+      toBase: (v) => v * 0.3048,
+      fromBase: (v) => v / 0.3048,
+    })
+    this.addUnit({
+      id: "knot",
+      name: "Knot",
+      symbol: "kn",
+      category: "speed",
+      toBase: (v) => v * 0.514444,
+      fromBase: (v) => v / 0.514444,
     })
 
     this.initializeDataUnits()
@@ -468,6 +707,118 @@ export class ConversionEngine {
       toBase: (v) => v * 745.7,
       fromBase: (v) => v / 745.7,
     })
+
+    // Force units (base: Newton)
+    this.addUnit({
+      id: "n",
+      name: "Newton",
+      symbol: "N",
+      category: "force",
+      toBase: (v) => v,
+      fromBase: (v) => v,
+    })
+    this.addUnit({
+      id: "lbf",
+      name: "Pound-force",
+      symbol: "lbf",
+      category: "force",
+      toBase: (v) => v * 4.44822,
+      fromBase: (v) => v / 4.44822,
+    })
+    this.addUnit({
+      id: "kgf",
+      name: "Kilogram-force",
+      symbol: "kgf",
+      category: "force",
+      toBase: (v) => v * 9.80665,
+      fromBase: (v) => v / 9.80665,
+    })
+
+    // Density units (base: kilogram per cubic meter)
+    this.addUnit({
+      id: "kg_m3",
+      name: "Kilogram per Cubic Meter",
+      symbol: "kg/m³",
+      category: "density",
+      toBase: (v) => v,
+      fromBase: (v) => v,
+    })
+    this.addUnit({
+      id: "g_cm3",
+      name: "Gram per Cubic Centimeter",
+      symbol: "g/cm³",
+      category: "density",
+      toBase: (v) => v * 1000,
+      fromBase: (v) => v / 1000,
+    })
+    this.addUnit({
+      id: "lb_ft3",
+      name: "Pound per Cubic Foot",
+      symbol: "lb/ft³",
+      category: "density",
+      toBase: (v) => v * 16.0185,
+      fromBase: (v) => v / 16.0185,
+    })
+
+    // Angle units (base: radian)
+    this.addUnit({
+      id: "rad",
+      name: "Radian",
+      symbol: "rad",
+      category: "angle",
+      toBase: (v) => v,
+      fromBase: (v) => v,
+    })
+    this.addUnit({
+      id: "deg",
+      name: "Degree",
+      symbol: "°",
+      category: "angle",
+      toBase: (v) => v * Math.PI / 180,
+      fromBase: (v) => v * 180 / Math.PI,
+    })
+    this.addUnit({
+      id: "grad",
+      name: "Gradian",
+      symbol: "grad",
+      category: "angle",
+      toBase: (v) => v * Math.PI / 200,
+      fromBase: (v) => v * 200 / Math.PI,
+    })
+
+    // Fuel efficiency units (base: liter per 100 kilometers)
+    this.addUnit({
+      id: "l_100km",
+      name: "Liter per 100 km",
+      symbol: "L/100km",
+      category: "fuel",
+      toBase: (v) => v,
+      fromBase: (v) => v,
+    })
+    this.addUnit({
+      id: "mpg_us",
+      name: "Miles per Gallon (US)",
+      symbol: "mpg",
+      category: "fuel",
+      toBase: (v) => 235.215 / v,
+      fromBase: (v) => 235.215 / v,
+    })
+    this.addUnit({
+      id: "mpg_uk",
+      name: "Miles per Gallon (UK)",
+      symbol: "mpg",
+      category: "fuel",
+      toBase: (v) => 282.481 / v,
+      fromBase: (v) => 282.481 / v,
+    })
+    this.addUnit({
+      id: "km_l",
+      name: "Kilometer per Liter",
+      symbol: "km/L",
+      category: "fuel",
+      toBase: (v) => 100 / v,
+      fromBase: (v) => 100 / v,
+    })
   }
 
   private addUnit(unit: Unit) {
@@ -525,6 +876,55 @@ export class ConversionEngine {
       unit: toUnit,
       formatted,
     }
+  }
+
+  convertComposite(values: number[], fromUnitId: string, toUnitId: string): ConversionResult | null {
+    const fromUnit = this.getUnit(fromUnitId)
+    const toUnit = this.getUnit(toUnitId)
+
+    if (!fromUnit || !toUnit || fromUnit.category !== toUnit.category) {
+      return null
+    }
+
+    // Handle feet-inch conversion
+    if (fromUnitId === "ft_in") {
+      const [feet = 0, inches = 0] = values
+      if (isNaN(feet) || isNaN(inches) || !isFinite(feet) || !isFinite(inches)) {
+        return null
+      }
+      
+      // Convert feet and inches to meters (base unit)
+      const totalMeters = feet * 0.3048 + inches * 0.0254
+      const convertedValue = toUnit.fromBase(totalMeters)
+      
+      return {
+        value: convertedValue,
+        unit: toUnit,
+        formatted: this.formatNumber(convertedValue),
+      }
+    }
+
+    // Handle conversion TO feet-inch
+    if (toUnitId === "ft_in" && values.length === 1) {
+      const [value] = values
+      if (isNaN(value) || !isFinite(value)) {
+        return null
+      }
+      
+      const baseValue = fromUnit.toBase(value)
+      // Convert meters to feet and inches
+      const totalInches = baseValue / 0.0254
+      const feet = Math.floor(totalInches / 12)
+      const inches = totalInches % 12
+      
+      return {
+        value: totalInches, // Keep original total inches for internal use
+        unit: toUnit,
+        formatted: `${feet}' ${this.formatNumber(inches)}"`,
+      }
+    }
+
+    return null
   }
 
   convertToMultiple(value: number, fromUnitId: string, toUnitIds: string[]): ConversionResult[] {
