@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ArrowLeftRight } from "lucide-react"
 import { conversionEngine, type Unit, type ConversionResult } from "@/lib/conversion-engine"
-import { storageManager } from "@/lib/storage"
 import { DualInput } from "./dual-input"
 
 interface UnitConverterProps {
@@ -169,19 +168,6 @@ export function UnitConverter({ selectedCategory, initialFromUnit, initialToUnit
       }
     }
 
-    // Save to recents
-    if (conversionResult) {
-      const value = fromUnitObj?.isComposite ? 
-        fromCompositeValues.reduce((sum, v, i) => sum + (Number.parseFloat(v) || 0) * (i === 0 ? 12 : 1), 0) :
-        Number.parseFloat(fromValue)
-      
-      storageManager.addRecent({
-        fromUnitId: fromUnit,
-        toUnitId: toUnit,
-        value,
-        result: conversionResult.value,
-      })
-    }
   }, [fromValue, fromCompositeValues, fromUnit, toUnit, activeInput, units])
 
   // Perform conversion from "to" to "from"
@@ -222,19 +208,6 @@ export function UnitConverter({ selectedCategory, initialFromUnit, initialToUnit
       }
     }
 
-    // Save to recents
-    if (conversionResult) {
-      const value = toUnitObj?.isComposite ? 
-        toCompositeValues.reduce((sum, v, i) => sum + (Number.parseFloat(v) || 0) * (i === 0 ? 12 : 1), 0) :
-        Number.parseFloat(toValue)
-      
-      storageManager.addRecent({
-        fromUnitId: toUnit,
-        toUnitId: fromUnit,
-        value,
-        result: conversionResult.value,
-      })
-    }
   }, [toValue, toCompositeValues, fromUnit, toUnit, activeInput, units])
 
   // Auto-convert when editing the FROM side

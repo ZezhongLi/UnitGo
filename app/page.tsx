@@ -4,7 +4,6 @@ import { useState, useEffect } from "react"
 import { CategorySelector } from "@/components/category-selector"
 import { UnitConverter } from "@/components/unit-converter"
 import { BatchConverter } from "@/components/batch-converter"
-import { QuickAccess } from "@/components/quick-access"
 import { ConversionShortcuts } from "@/components/conversion-shortcuts"
 import { UnitSearch } from "@/components/unit-search"
 import { SettingsPanel } from "@/components/settings-panel"
@@ -50,14 +49,6 @@ export default function HomePage() {
     // The unit will be available for selection in the converter
   }
 
-  const handleConversionSelect = (fromUnitId: string, toUnitId: string, value: number) => {
-    // Switch to the appropriate category
-    const fromUnit = conversionEngine.getUnit(fromUnitId)
-    if (fromUnit) {
-      setSelectedCategory(fromUnit.category)
-    }
-    // In a real implementation, we would also set the converter values
-  }
 
   const handleShortcutSelect = (shortcut: { fromUnit: string; toUnit: string; category: string; value: number }) => {
     // Use React's automatic batching to ensure both updates happen together
@@ -101,9 +92,6 @@ export default function HomePage() {
 
           {/* Sidebar */}
           <div className="space-y-6">
-            {/* Quick Access */}
-            <QuickAccess onUnitSelect={handleUnitSelect} onConversionSelect={handleConversionSelect} />
-
             {/* Unit Search */}
             <UnitSearch onUnitSelect={handleUnitSelect} />
 
