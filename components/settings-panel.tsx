@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Slider } from "@/components/ui/slider"
 import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Settings, RotateCcw, Download, Upload, Trash2 } from "lucide-react"
+import { Settings, RotateCcw } from "lucide-react"
 import { conversionEngine } from "@/lib/conversion-engine"
 import { storageManager, type AppSettings } from "@/lib/storage"
 
@@ -60,59 +60,6 @@ export function SettingsPanel() {
     conversionEngine.setDataSizeMode(defaultSettings.dataSizeMode)
   }
 
-  const exportData = () => {
-    const data = {
-      recents: storageManager.getRecents(),
-      settings: storageManager.getSettings(),
-      exportDate: new Date().toISOString(),
-    }
-
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement("a")
-    a.href = url
-    a.download = `unitgo-data-${new Date().toISOString().split("T")[0]}.json`
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    URL.revokeObjectURL(url)
-  }
-
-  const importData = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (!file) return
-
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      try {
-        const data = JSON.parse(e.target?.result as string)
-
-
-        // Import settings
-        if (data.settings) {
-          storageManager.updateSettings(data.settings)
-          loadSettings()
-        }
-
-        alert("Data imported successfully!")
-      } catch (error) {
-        alert("Failed to import data. Please check the file format.")
-      }
-    }
-    reader.readAsText(file)
-
-    // Reset the input
-    event.target.value = ""
-  }
-
-  const clearAllData = () => {
-    if (confirm("Are you sure you want to clear all data? This cannot be undone.")) {
-      storageManager.clearRecents()
-
-      resetSettings()
-      alert("All data cleared successfully!")
-    }
-  }
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -209,50 +156,21 @@ export function SettingsPanel() {
             </div>
           </Card>
 
-          {/* Data Management */}
+          {/* Reset Settings */}
           <Card className="p-4">
-            <h3 className="text-lg font-semibold mb-4">Data Management</h3>
+            <h3 className="text-lg font-semibold mb-4">Reset</h3>
 
             <div className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <Button variant="outline" onClick={exportData} className="flex items-center gap-2 bg-transparent">
-                  <Download className="size-4" />
-                  Export Data
-                </Button>
-
-                <div className="relative">
-                  <input
-                    type="file"
-                    accept=".json"
-                    onChange={importData}
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                  />
-                  <Button variant="outline" className="w-full flex items-center gap-2 bg-transparent">
-                    <Upload className="size-4" />
-                    Import Data
-                  </Button>
-                </div>
-              </div>
-
-              <div className="pt-2 border-t">
-                <Button
-                  variant="outline"
-                  onClick={resetSettings}
-                  className="flex items-center gap-2 mr-2 bg-transparent"
-                >
-                  <RotateCcw className="size-4" />
-                  Reset Settings
-                </Button>
-
-                <Button variant="destructive" onClick={clearAllData} className="flex items-center gap-2">
-                  <Trash2 className="size-4" />
-                  Clear All Data
-                </Button>
-              </div>
-
+              <Button
+                variant="outline"
+                onClick={resetSettings}
+                className="flex items-center gap-2 bg-transparent"
+              >
+                <RotateCcw className="size-4" />
+                Reset Settings
+              </Button>
               <p className="text-sm text-muted-foreground">
-                Export your settings to backup or transfer to another device. Import previously exported
-                data to restore your preferences.
+                Reset all settings to their default values. Your preferences are automatically saved.
               </p>
             </div>
           </Card>
@@ -277,10 +195,6 @@ export function SettingsPanel() {
               <div className="flex justify-between">
                 <span>Categories:</span>
                 <span>{conversionEngine.getAllCategories().length}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Recent Conversions:</span>
-                <span>{storageManager.getRecents().length}</span>
               </div>
             </div>
 

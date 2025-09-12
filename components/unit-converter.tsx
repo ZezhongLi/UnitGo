@@ -15,9 +15,14 @@ interface UnitConverterProps {
   initialFromUnit?: string
   initialToUnit?: string
   initialValue?: string
+  onStateChange?: (state: {
+    fromValue: string
+    fromUnit: string
+    fromCompositeValues: string[]
+  }) => void
 }
 
-export function UnitConverter({ selectedCategory, initialFromUnit, initialToUnit, initialValue }: UnitConverterProps) {
+export function UnitConverter({ selectedCategory, initialFromUnit, initialToUnit, initialValue, onStateChange }: UnitConverterProps) {
   const [fromValue, setFromValue] = useState<string>("1")
   const [toValue, setToValue] = useState<string>("")
   const [fromUnit, setFromUnit] = useState<string>("")
@@ -52,6 +57,17 @@ export function UnitConverter({ selectedCategory, initialFromUnit, initialToUnit
   useEffect(() => {
     initialValuesApplied.current = false
   }, [initialFromUnit, initialToUnit, initialValue])
+
+  // Notify parent of state changes
+  useEffect(() => {
+    if (onStateChange && fromUnit) {
+      onStateChange({
+        fromValue,
+        fromUnit,
+        fromCompositeValues
+      })
+    }
+  }, [fromValue, fromUnit, fromCompositeValues, onStateChange])
 
   // Load units for selected category
   useEffect(() => {

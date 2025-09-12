@@ -13,16 +13,22 @@ import { conversionEngine, type Unit, type ConversionResult } from "@/lib/conver
 
 interface BatchConverterProps {
   selectedCategory: string
+  converterState: {
+    fromValue: string
+    fromUnit: string
+    fromCompositeValues: string[]
+  }
 }
 
-export function BatchConverter({ selectedCategory }: BatchConverterProps) {
-  const [inputValue, setInputValue] = useState<string>("1")
-  const [fromUnit, setFromUnit] = useState<string>("")
+export function BatchConverter({ selectedCategory, converterState }: BatchConverterProps) {
   const [selectedUnits, setSelectedUnits] = useState<Set<string>>(new Set())
   const [results, setResults] = useState<ConversionResult[]>([])
   const [units, setUnits] = useState<Unit[]>([])
   const [showBatch, setShowBatch] = useState(false)
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null)
+
+  // Use values from the main converter
+  const { fromValue, fromUnit, fromCompositeValues } = converterState
 
   // Load units for selected category
   useEffect(() => {
@@ -30,28 +36,32 @@ export function BatchConverter({ selectedCategory }: BatchConverterProps) {
       const categoryUnits = conversionEngine.getUnitsByCategory(selectedCategory as any)
       setUnits(categoryUnits)
 
-      // Set default from unit if none selected
-      if (!fromUnit && categoryUnits.length > 0) {
-        setFromUnit(categoryUnits[0].id)
-      }
-
       // Auto-select some common units for batch conversion
       if (categoryUnits.length > 1) {
         const commonUnits = categoryUnits.slice(0, Math.min(5, categoryUnits.length))
         setSelectedUnits(new Set(commonUnits.map((u) => u.id)))
       }
     }
-  }, [selectedCategory, fromUnit])
+  }, [selectedCategory])
 
   // Perform batch conversion
   const performBatchConversion = useMemo(() => {
-    const numValue = Number.parseFloat(inputValue)
-    if (!isNaN(numValue) && fromUnit && selectedUnits.size > 0) {
+    if (!fromUnit || selectedUnits.size === 0) {
+      return []
+    }
+
+    // Calculate the numeric value, handling composite units
+    const fromUnitObj = units.find(u => u.id === fromUnit)
+    const numValue = fromUnitObj?.isComposite ? 
+      fromCompositeValues.reduce((sum, v, i) => sum + (Number.parseFloat(v) || 0) * (i === 0 ? 12 : 1), 0) :
+      Number.parseFloat(fromValue)
+
+    if (!isNaN(numValue)) {
       const targetUnits = Array.from(selectedUnits).filter((unitId) => unitId !== fromUnit)
       return conversionEngine.convertToMultiple(numValue, fromUnit, targetUnits)
     }
     return []
-  }, [inputValue, fromUnit, selectedUnits])
+  }, [fromValue, fromCompositeValues, fromUnit, selectedUnits, units])
 
   useEffect(() => {
     setResults(performBatchConversion)
@@ -78,7 +88,11 @@ export function BatchConverter({ selectedCategory }: BatchConverterProps) {
   }
 
   const copyResult = async (result: ConversionResult, index: number) => {
-    const text = `${inputValue} ${units.find((u) => u.id === fromUnit)?.symbol} = ${result.formatted} ${result.unit.symbol}`
+    const fromUnitObj = units.find((u) => u.id === fromUnit)
+    const displayValue = fromUnitObj?.isComposite ? 
+      `${fromCompositeValues[0] || "0"}' ${fromCompositeValues[1] || "0"}"` :
+      fromValue
+    const text = `${displayValue} ${fromUnitObj?.symbol} = ${result.formatted} ${result.unit.symbol}`
     try {
       await navigator.clipboard.writeText(text)
       setCopiedIndex(index)
@@ -89,9 +103,12 @@ export function BatchConverter({ selectedCategory }: BatchConverterProps) {
   }
 
   const copyAllResults = async () => {
-    const fromUnitSymbol = units.find((u) => u.id === fromUnit)?.symbol || ""
+    const fromUnitObj = units.find((u) => u.id === fromUnit)
+    const displayValue = fromUnitObj?.isComposite ? 
+      `${fromCompositeValues[0] || "0"}' ${fromCompositeValues[1] || "0"}"` :
+      fromValue
     const allText = results
-      .map((result) => `${inputValue} ${fromUnitSymbol} = ${result.formatted} ${result.unit.symbol}`)
+      .map((result) => `${displayValue} ${fromUnitObj?.symbol} = ${result.formatted} ${result.unit.symbol}`)
       .join("\n")
 
     try {
@@ -166,37 +183,25 @@ export function BatchConverter({ selectedCategory }: BatchConverterProps) {
         </div>
       </div>
 
-      {/* Input Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label>Value</Label>
-          <Input
-            type="number"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            placeholder="Enter value"
-            className="text-lg"
-          />
-        </div>
-        <div className="space-y-2">
-          <Label>From Unit</Label>
-          <Select value={fromUnit} onValueChange={setFromUnit}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select unit" />
-            </SelectTrigger>
-            <SelectContent>
-              {units.map((unit) => (
-                <SelectItem key={unit.id} value={unit.id}>
-                  <div className="flex items-center gap-2">
-                    <span>{unit.name}</span>
-                    <Badge variant="outline" className="text-xs">
-                      {unit.symbol}
-                    </Badge>
-                  </div>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+      {/* Current Value Display */}
+      <div className="p-4 bg-muted/30 rounded-lg border">
+        <div className="flex items-center justify-between">
+          <div className="text-sm text-muted-foreground">Converting from:</div>
+          <div className="text-right">
+            <div className="text-lg font-semibold">
+              {units.find(u => u.id === fromUnit)?.isComposite ? (
+                <span>{fromCompositeValues[0] || "0"}' {fromCompositeValues[1] || "0"}"</span>
+              ) : (
+                <span>{fromValue}</span>
+              )}
+              <span className="ml-2 text-sm text-muted-foreground">
+                {units.find((u) => u.id === fromUnit)?.symbol}
+              </span>
+            </div>
+            <div className="text-sm text-muted-foreground">
+              {units.find((u) => u.id === fromUnit)?.name}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -281,7 +286,12 @@ export function BatchConverter({ selectedCategory }: BatchConverterProps) {
           {/* Summary */}
           <div className="p-4 bg-primary/5 rounded-lg border border-primary/20">
             <div className="text-center text-sm">
-              <span className="font-semibold">{inputValue}</span>
+              <span className="font-semibold">
+                {units.find(u => u.id === fromUnit)?.isComposite ? 
+                  `${fromCompositeValues[0] || "0"}' ${fromCompositeValues[1] || "0"}"` :
+                  fromValue
+                }
+              </span>
               <span className="mx-2">{units.find((u) => u.id === fromUnit)?.symbol}</span>
               <span className="text-muted-foreground">converted to {results.length} different units</span>
             </div>

@@ -19,6 +19,15 @@ export default function HomePage() {
     initialValue?: string
     key?: string
   }>({})
+  const [converterState, setConverterState] = useState<{
+    fromValue: string
+    fromUnit: string
+    fromCompositeValues: string[]
+  }>({
+    fromValue: "1",
+    fromUnit: "",
+    fromCompositeValues: ["", ""]
+  })
 
   // Load settings on mount
   useEffect(() => {
@@ -84,10 +93,10 @@ export default function HomePage() {
 
 
             {/* Main Converter */}
-            {selectedCategory && <UnitConverter key={converterProps.key || selectedCategory} selectedCategory={selectedCategory} initialFromUnit={converterProps.initialFromUnit} initialToUnit={converterProps.initialToUnit} initialValue={converterProps.initialValue} />}
+            {selectedCategory && <UnitConverter key={converterProps.key || selectedCategory} selectedCategory={selectedCategory} initialFromUnit={converterProps.initialFromUnit} initialToUnit={converterProps.initialToUnit} initialValue={converterProps.initialValue} onStateChange={setConverterState} />}
 
             {/* Batch Converter */}
-            {selectedCategory && <BatchConverter selectedCategory={selectedCategory} />}
+            {selectedCategory && <BatchConverter selectedCategory={selectedCategory} converterState={converterState} />}
           </div>
 
           {/* Sidebar */}
