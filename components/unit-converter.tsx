@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ArrowUpDown } from "lucide-react"
+import { ArrowLeftRight } from "lucide-react"
 import { conversionEngine, type Unit, type ConversionResult } from "@/lib/conversion-engine"
 import { storageManager } from "@/lib/storage"
 import { DualInput } from "./dual-input"
@@ -295,7 +295,7 @@ export function UnitConverter({ selectedCategory }: UnitConverterProps) {
               disabled={!fromUnit || !toUnit}
               className="rounded-full h-14 w-14 border-2 border-primary/30 hover:border-primary shadow-lg hover:shadow-xl transition-all duration-200 bg-background/80 backdrop-blur-sm"
             >
-              <ArrowUpDown className="size-6" />
+              <ArrowLeftRight className="size-6" />
             </Button>
           </div>
 
