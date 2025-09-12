@@ -555,11 +555,6 @@ export class ConversionEngine {
     return Number.parseFloat(fixed).toString()
   }
 
-  // Special height conversion (feet + inches to cm)
-  convertHeight(feet: number, inches: number): ConversionResult | null {
-    const totalInches = feet * 12 + inches
-    return this.convert(totalInches, "in", "cm")
-  }
 }
 
 // Singleton instance

@@ -4,7 +4,6 @@ import { useState, useEffect } from "react"
 import { CategorySelector } from "@/components/category-selector"
 import { UnitConverter } from "@/components/unit-converter"
 import { BatchConverter } from "@/components/batch-converter"
-import { HeightConverter } from "@/components/height-converter"
 import { QuickAccess } from "@/components/quick-access"
 import { ConversionShortcuts } from "@/components/conversion-shortcuts"
 import { UnitSearch } from "@/components/unit-search"
@@ -69,8 +68,6 @@ export default function HomePage() {
             {/* Category Selection */}
             <CategorySelector selectedCategory={selectedCategory} onCategoryChange={handleCategoryChange} />
 
-            {/* Height Converter - Special case for length category */}
-            {selectedCategory === "length" && <HeightConverter />}
 
             {/* Main Converter */}
             {selectedCategory && <UnitConverter selectedCategory={selectedCategory} />}
