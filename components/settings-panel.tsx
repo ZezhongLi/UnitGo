@@ -181,10 +181,6 @@ export function SettingsPanel() {
 
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span>Version:</span>
-                <span>1.0.0</span>
-              </div>
-              <div className="flex justify-between">
                 <span>Total Units:</span>
                 <span>
                   {conversionEngine
@@ -202,6 +198,9 @@ export function SettingsPanel() {
               <p>
                 UnitGo provides accurate conversions based on ISO definitions. All conversions work offline and
                 your data is stored locally on your device.
+              </p>
+              <p className="mt-2 text-orange-600 dark:text-orange-400">
+                ⚠️ This is AI-assisted development and may have issues and bugs.
               </p>
             </div>
           </Card>
