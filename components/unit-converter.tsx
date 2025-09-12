@@ -14,11 +14,13 @@ interface UnitConverterProps {
 }
 
 export function UnitConverter({ selectedCategory }: UnitConverterProps) {
-  const [inputValue, setInputValue] = useState<string>("1")
+  const [fromValue, setFromValue] = useState<string>("1")
+  const [toValue, setToValue] = useState<string>("")
   const [fromUnit, setFromUnit] = useState<string>("")
   const [toUnit, setToUnit] = useState<string>("")
   const [result, setResult] = useState<ConversionResult | null>(null)
   const [units, setUnits] = useState<Unit[]>([])
+  const [activeInput, setActiveInput] = useState<"from" | "to">("from")
 
   // Load units for selected category
   useEffect(() => {
@@ -36,13 +38,15 @@ export function UnitConverter({ selectedCategory }: UnitConverterProps) {
     }
   }, [selectedCategory, fromUnit, toUnit])
 
-
-  // Perform conversion
-  const performConversion = useCallback(() => {
-    const numValue = Number.parseFloat(inputValue)
+  // Perform conversion from "from" to "to"
+  const performConversionFromTo = useCallback(() => {
+    const numValue = Number.parseFloat(fromValue)
     if (!isNaN(numValue) && fromUnit && toUnit) {
       const conversionResult = conversionEngine.convert(numValue, fromUnit, toUnit)
       setResult(conversionResult)
+      if (conversionResult && activeInput === "from") {
+        setToValue(conversionResult.formatted)
+      }
 
       // Save to recents
       if (conversionResult) {
@@ -55,21 +59,48 @@ export function UnitConverter({ selectedCategory }: UnitConverterProps) {
       }
     } else {
       setResult(null)
+      if (activeInput === "from") {
+        setToValue("")
+      }
     }
-  }, [inputValue, fromUnit, toUnit])
+  }, [fromValue, fromUnit, toUnit, activeInput])
+
+  // Perform conversion from "to" to "from"
+  const performConversionToFrom = useCallback(() => {
+    const numValue = Number.parseFloat(toValue)
+    if (!isNaN(numValue) && fromUnit && toUnit) {
+      const conversionResult = conversionEngine.convert(numValue, toUnit, fromUnit)
+      if (conversionResult && activeInput === "to") {
+        setFromValue(conversionResult.formatted)
+      }
+
+      // Save to recents
+      storageManager.addRecent({
+        fromUnitId: toUnit,
+        toUnitId: fromUnit,
+        value: numValue,
+        result: conversionResult.value,
+      })
+    }
+  }, [toValue, fromUnit, toUnit, activeInput])
 
   // Auto-convert when values change
   useEffect(() => {
-    performConversion()
-  }, [performConversion])
+    if (activeInput === "from") {
+      performConversionFromTo()
+    } else if (activeInput === "to") {
+      performConversionToFrom()
+    }
+  }, [performConversionFromTo, performConversionToFrom, activeInput])
 
   const handleSwapUnits = () => {
     if (fromUnit && toUnit) {
       setFromUnit(toUnit)
       setToUnit(fromUnit)
-      if (result) {
-        setInputValue(result.formatted)
-      }
+      // Swap the values as well
+      const tempValue = fromValue
+      setFromValue(toValue)
+      setToValue(tempValue)
     }
   }
 
@@ -84,25 +115,38 @@ export function UnitConverter({ selectedCategory }: UnitConverterProps) {
   )
 
   return (
-    <Card className="p-6 space-y-6">
-      <div className="space-y-4">
-        <h2 className="text-2xl font-bold text-center">Unit Converter</h2>
+    <Card className="p-8 space-y-8 bg-gradient-to-br from-background to-muted/20 border-2 shadow-lg">
+      <div className="space-y-6">
+        <h2 className="text-3xl font-bold text-center bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+          Unit Converter
+        </h2>
 
         {/* Input Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
           {/* From Unit */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium">From</label>
-            <div className="space-y-2">
-              <Input
-                type="number"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                placeholder="Enter value"
-                className="text-lg"
-              />
+          <div className="space-y-4">
+            <label className="text-lg font-semibold text-foreground">From</label>
+            <div className="space-y-3">
+              <div className="relative">
+                <Input
+                  type="number"
+                  value={fromValue}
+                  onChange={(e) => {
+                    setFromValue(e.target.value)
+                    setActiveInput("from")
+                  }}
+                  onFocus={() => setActiveInput("from")}
+                  placeholder="Enter value"
+                  className="text-xl h-14 px-4 border-2 border-primary/20 focus:border-primary shadow-md bg-background/80 backdrop-blur-sm"
+                />
+                {fromUnit && (
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium text-muted-foreground bg-background/80 px-2 py-1 rounded">
+                    {units.find((u) => u.id === fromUnit)?.symbol}
+                  </div>
+                )}
+              </div>
               <Select value={fromUnit} onValueChange={setFromUnit}>
-                <SelectTrigger>
+                <SelectTrigger className="h-12 border-2 border-primary/20 focus:border-primary shadow-md">
                   <SelectValue placeholder="Select unit" />
                 </SelectTrigger>
                 <SelectContent>
@@ -117,38 +161,42 @@ export function UnitConverter({ selectedCategory }: UnitConverterProps) {
           </div>
 
           {/* Swap Button */}
-          <div className="flex items-center justify-center md:mt-8">
+          <div className="flex items-center justify-center md:mt-12">
             <Button
               variant="outline"
               size="icon"
               onClick={handleSwapUnits}
               disabled={!fromUnit || !toUnit}
-              className="rounded-full bg-transparent"
+              className="rounded-full h-14 w-14 border-2 border-primary/30 hover:border-primary shadow-lg hover:shadow-xl transition-all duration-200 bg-background/80 backdrop-blur-sm"
             >
-              <ArrowUpDown className="size-4" />
+              <ArrowUpDown className="size-6" />
             </Button>
           </div>
 
           {/* To Unit */}
-          <div className="space-y-2 md:col-start-2">
-            <label className="text-sm font-medium">To</label>
-            <div className="space-y-2">
+          <div className="space-y-4">
+            <label className="text-lg font-semibold text-foreground">To</label>
+            <div className="space-y-3">
               <div className="relative">
                 <Input
-                  type="text"
-                  value={result?.formatted || ""}
-                  readOnly
-                  placeholder="Result"
-                  className="text-lg bg-muted"
+                  type="number"
+                  value={toValue}
+                  onChange={(e) => {
+                    setToValue(e.target.value)
+                    setActiveInput("to")
+                  }}
+                  onFocus={() => setActiveInput("to")}
+                  placeholder="Enter value"
+                  className="text-xl h-14 px-4 border-2 border-primary/20 focus:border-primary shadow-md bg-background/80 backdrop-blur-sm"
                 />
-                {result && (
-                  <div className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
-                    {result.unit.symbol}
+                {toUnit && (
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium text-muted-foreground bg-background/80 px-2 py-1 rounded">
+                    {units.find((u) => u.id === toUnit)?.symbol}
                   </div>
                 )}
               </div>
               <Select value={toUnit} onValueChange={setToUnit}>
-                <SelectTrigger>
+                <SelectTrigger className="h-12 border-2 border-primary/20 focus:border-primary shadow-md">
                   <SelectValue placeholder="Select unit" />
                 </SelectTrigger>
                 <SelectContent>
@@ -165,13 +213,13 @@ export function UnitConverter({ selectedCategory }: UnitConverterProps) {
 
         {/* Conversion Display */}
         {result && (
-          <div className="text-center p-4 bg-muted rounded-lg">
-            <div className="text-lg">
-              <span className="font-semibold">{inputValue}</span>
-              <span className="mx-2 text-muted-foreground">{units.find((u) => u.id === fromUnit)?.symbol}</span>
-              <span className="mx-2">=</span>
-              <span className="font-semibold text-primary">{result.formatted}</span>
-              <span className="mx-2 text-muted-foreground">{result.unit.symbol}</span>
+          <div className="text-center p-6 bg-gradient-to-r from-primary/10 to-primary/5 rounded-xl border border-primary/20 shadow-md">
+            <div className="text-xl font-medium">
+              <span className="font-bold text-2xl">{fromValue}</span>
+              <span className="mx-3 text-muted-foreground text-lg">{units.find((u) => u.id === fromUnit)?.symbol}</span>
+              <span className="mx-3 text-2xl">=</span>
+              <span className="font-bold text-2xl text-primary">{toValue}</span>
+              <span className="mx-3 text-muted-foreground text-lg">{units.find((u) => u.id === toUnit)?.symbol}</span>
             </div>
           </div>
         )}
