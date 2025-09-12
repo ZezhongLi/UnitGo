@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -12,9 +12,12 @@ import { DualInput } from "./dual-input"
 
 interface UnitConverterProps {
   selectedCategory: string
+  initialFromUnit?: string
+  initialToUnit?: string
+  initialValue?: string
 }
 
-export function UnitConverter({ selectedCategory }: UnitConverterProps) {
+export function UnitConverter({ selectedCategory, initialFromUnit, initialToUnit, initialValue }: UnitConverterProps) {
   const [fromValue, setFromValue] = useState<string>("1")
   const [toValue, setToValue] = useState<string>("")
   const [fromUnit, setFromUnit] = useState<string>("")
@@ -24,6 +27,7 @@ export function UnitConverter({ selectedCategory }: UnitConverterProps) {
   const [activeInput, setActiveInput] = useState<"from" | "to">("from")
   const [fromCompositeValues, setFromCompositeValues] = useState<string[]>(["", ""])
   const [toCompositeValues, setToCompositeValues] = useState<string[]>(["", ""])
+  const initialValuesApplied = useRef(false)
 
   // Helpers to avoid infinite update loops when setting composite values
   const setToCompositeIfChanged = useCallback((next: string[]) => {
@@ -44,6 +48,11 @@ export function UnitConverter({ selectedCategory }: UnitConverterProps) {
     })
   }, [])
 
+  // Reset the initial values applied flag when props change
+  useEffect(() => {
+    initialValuesApplied.current = false
+  }, [initialFromUnit, initialToUnit, initialValue])
+
   // Load units for selected category
   useEffect(() => {
     if (selectedCategory) {
@@ -59,6 +68,35 @@ export function UnitConverter({ selectedCategory }: UnitConverterProps) {
       }
     }
   }, [selectedCategory])
+
+  // Apply initial values from props (runs after units are loaded)
+  useEffect(() => {
+    if (units.length > 0 && !initialValuesApplied.current && (initialFromUnit || initialToUnit || initialValue)) {
+      // Apply initial units
+      if (initialFromUnit && units.find(u => u.id === initialFromUnit)) {
+        setFromUnit(initialFromUnit)
+      }
+      if (initialToUnit && units.find(u => u.id === initialToUnit)) {
+        setToUnit(initialToUnit)
+      }
+
+      // Apply initial value
+      if (initialValue) {
+        const targetFromUnit = initialFromUnit || fromUnit
+        const fromUnitObj = units.find(u => u.id === targetFromUnit)
+        
+        if (fromUnitObj?.isComposite && targetFromUnit === "ft_in") {
+          // For feet & inches, set the feet value and inches to 0
+          setFromCompositeValues([initialValue, "0"])
+        } else {
+          setFromValue(initialValue)
+        }
+        setActiveInput("from")
+      }
+
+      initialValuesApplied.current = true
+    }
+  }, [units, initialFromUnit, initialToUnit, initialValue, fromUnit])
 
   // Validate units when they change - ensure they exist in current category
   useEffect(() => {

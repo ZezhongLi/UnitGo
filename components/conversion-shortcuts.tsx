@@ -30,7 +30,7 @@ const commonShortcuts: ConversionShortcut[] = [
   {
     label: "Human Height",
     description: "6 feet to centimeters",
-    fromUnit: "ft",
+    fromUnit: "ft_in",
     toUnit: "cm",
     category: "length",
     value: 6,

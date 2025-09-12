@@ -13,6 +13,12 @@ import { conversionEngine } from "@/lib/conversion-engine"
 
 export default function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("length")
+  const [converterProps, setConverterProps] = useState<{
+    initialFromUnit?: string
+    initialToUnit?: string
+    initialValue?: string
+    key?: string
+  }>({})
 
   // Load settings on mount
   useEffect(() => {
@@ -24,6 +30,8 @@ export default function HomePage() {
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category)
+    // Clear converter props when category changes manually (not from shortcuts)
+    setConverterProps({})
   }
 
   const handleUnitSelect = (unitId: string, category: string) => {
@@ -42,9 +50,15 @@ export default function HomePage() {
     // In a real implementation, we would also set the converter values
   }
 
-  const handleShortcutSelect = (shortcut: any) => {
+  const handleShortcutSelect = (shortcut: { fromUnit: string; toUnit: string; category: string; value: number }) => {
+    // Use React's automatic batching to ensure both updates happen together
     setSelectedCategory(shortcut.category)
-    // In a real implementation, we would set the converter to use these values
+    setConverterProps({
+      initialFromUnit: shortcut.fromUnit,
+      initialToUnit: shortcut.toUnit,
+      initialValue: shortcut.value.toString(),
+      key: `shortcut-${Date.now()}` // Force re-mount to ensure fresh state
+    })
   }
 
 
@@ -58,7 +72,7 @@ export default function HomePage() {
             <SettingsPanel />
           </div>
           <p className="text-lg text-muted-foreground text-pretty">
-            Quick, reliable, and offline conversions between everyday and technical units
+            Quick conversions between everyday and technical units
           </p>
         </div>
 
@@ -70,7 +84,7 @@ export default function HomePage() {
 
 
             {/* Main Converter */}
-            {selectedCategory && <UnitConverter selectedCategory={selectedCategory} />}
+            {selectedCategory && <UnitConverter key={converterProps.key || selectedCategory} selectedCategory={selectedCategory} initialFromUnit={converterProps.initialFromUnit} initialToUnit={converterProps.initialToUnit} initialValue={converterProps.initialValue} />}
 
             {/* Batch Converter */}
             {selectedCategory && <BatchConverter selectedCategory={selectedCategory} />}

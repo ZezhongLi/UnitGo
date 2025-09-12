@@ -8,7 +8,7 @@ import "./globals.css"
 
 export const metadata: Metadata = {
   title: "UnitGo - Universal Unit Converter",
-  description: "Quick, reliable, and offline conversions between everyday and technical units",
+  description: "Quick conversions between everyday and technical units",
   generator: "v0.app",
 }
 
