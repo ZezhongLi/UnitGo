@@ -3,6 +3,7 @@
 import type React from "react"
 
 import { useState, useEffect } from "react"
+import { useTheme } from "next-themes"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
@@ -15,6 +16,7 @@ import { conversionEngine } from "@/lib/conversion-engine"
 import { storageManager, type AppSettings } from "@/lib/storage"
 
 export function SettingsPanel() {
+  const { theme, setTheme } = useTheme()
   const [settings, setSettings] = useState<AppSettings>({
     precision: 6,
     dataSizeMode: "si",
@@ -33,6 +35,11 @@ export function SettingsPanel() {
     // Apply settings to conversion engine
     conversionEngine.setPrecision(currentSettings.precision)
     conversionEngine.setDataSizeMode(currentSettings.dataSizeMode)
+    
+    // Sync theme with next-themes
+    if (currentSettings.theme && setTheme) {
+      setTheme(currentSettings.theme)
+    }
   }
 
   const updateSetting = <K extends keyof AppSettings>(key: K, value: AppSettings[K]) => {
@@ -45,6 +52,8 @@ export function SettingsPanel() {
       conversionEngine.setPrecision(value as number)
     } else if (key === "dataSizeMode") {
       conversionEngine.setDataSizeMode(value as "si" | "binary")
+    } else if (key === "theme") {
+      setTheme(value as string)
     }
   }
 
@@ -58,6 +67,7 @@ export function SettingsPanel() {
     storageManager.updateSettings(defaultSettings)
     conversionEngine.setPrecision(defaultSettings.precision)
     conversionEngine.setDataSizeMode(defaultSettings.dataSizeMode)
+    setTheme(defaultSettings.theme)
   }
 
 
@@ -139,7 +149,7 @@ export function SettingsPanel() {
               <div className="space-y-2">
                 <Label>Theme</Label>
                 <Select
-                  value={settings.theme}
+                  value={theme || settings.theme}
                   onValueChange={(value: "light" | "dark" | "system") => updateSetting("theme", value)}
                 >
                   <SelectTrigger>

@@ -141,7 +141,7 @@ export function BatchConverter({ selectedCategory, converterState }: BatchConver
             <Switch 
               checked={showBatch} 
               onCheckedChange={setShowBatch}
-              className="data-[state=unchecked]:bg-muted data-[state=checked]:bg-primary"
+              className="data-[state=unchecked]:bg-border data-[state=unchecked]:border-2 data-[state=unchecked]:border-muted-foreground/30 data-[state=checked]:bg-primary data-[state=checked]:border-primary shadow-md"
             />
           </div>
         </div>
@@ -178,7 +178,7 @@ export function BatchConverter({ selectedCategory, converterState }: BatchConver
             id="batch-mode" 
             checked={showBatch} 
             onCheckedChange={setShowBatch}
-            className="data-[state=unchecked]:bg-muted data-[state=checked]:bg-primary"
+            className="data-[state=unchecked]:bg-border data-[state=unchecked]:border-2 data-[state=unchecked]:border-muted-foreground/30 data-[state=checked]:bg-primary data-[state=checked]:border-primary shadow-md"
           />
         </div>
       </div>
