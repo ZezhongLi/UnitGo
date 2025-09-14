@@ -210,10 +210,20 @@ export function BatchConverter({ selectedCategory, converterState }: BatchConver
         <div className="flex items-center justify-between">
           <Label className="text-lg font-semibold">Convert To (select multiple units)</Label>
           <div className="flex gap-3">
-            <Button variant="outline" size="sm" onClick={selectAllUnits}>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={selectAllUnits}
+              className="transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg active:scale-95 hover:ring-2 hover:ring-primary/20 focus:ring-2 focus:ring-primary/20 hover:bg-gradient-to-r hover:from-primary/5 hover:to-accent/5 group"
+            >
               Select All
             </Button>
-            <Button variant="outline" size="sm" onClick={clearSelection}>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={clearSelection}
+              className="transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg active:scale-95 hover:ring-2 hover:ring-primary/20 focus:ring-2 focus:ring-primary/20 hover:bg-gradient-to-r hover:from-destructive/5 hover:to-destructive/10 group"
+            >
               Clear
             </Button>
           </div>
@@ -254,7 +264,7 @@ export function BatchConverter({ selectedCategory, converterState }: BatchConver
               variant="outline"
               size="sm"
               onClick={copyAllResults}
-              className="flex items-center gap-2 bg-transparent"
+              className="flex items-center gap-2 bg-transparent transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg active:scale-95 hover:ring-2 hover:ring-primary/20 focus:ring-2 focus:ring-primary/20 hover:bg-gradient-to-r hover:from-primary/5 hover:to-accent/5 group"
             >
               {copiedIndex === -1 ? <Check className="size-4 text-green-600" /> : <Copy className="size-4 text-foreground" />}
               Copy All
@@ -275,7 +285,7 @@ export function BatchConverter({ selectedCategory, converterState }: BatchConver
                   variant="ghost"
                   size="sm"
                   onClick={() => copyResult(result, index)}
-                  className="flex items-center gap-2 transition-all duration-200 ease-in-out hover:bg-primary/10 hover:scale-110 active:scale-95"
+                  className="flex items-center gap-2 transition-all duration-300 ease-in-out hover:bg-primary/10 hover:scale-110 active:scale-95 hover:ring-2 hover:ring-primary/20 focus:ring-2 focus:ring-primary/20 hover:shadow-lg group"
                 >
                   {copiedIndex === index ? <Check className="size-4 text-green-600" /> : <Copy className="size-4 text-foreground" />}
                 </Button>

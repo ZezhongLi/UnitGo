@@ -319,7 +319,7 @@ export function UnitConverter({ selectedCategory, initialFromUnit, initialToUnit
               size="icon"
               onClick={handleSwapUnits}
               disabled={!fromUnit || !toUnit}
-              className="rounded-full h-14 w-14 border-2 border-primary/30 hover:border-primary shadow-xl bg-gradient-to-br from-background to-background/90 backdrop-blur-sm hover:shadow-2xl transition-all duration-200 hover:scale-110 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+              className="rounded-full h-14 w-14 border-2 border-primary/30 hover:border-primary shadow-xl bg-gradient-to-br from-background to-background/90 backdrop-blur-sm hover:shadow-2xl transition-all duration-300 hover:scale-110 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 hover:bg-gradient-to-br hover:from-primary/5 hover:to-accent/5 focus:ring-2 focus:ring-primary/30 group"
             >
               <ArrowLeftRight className="size-6 transition-transform duration-200 group-hover:rotate-180 text-foreground" />
             </Button>

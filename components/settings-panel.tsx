@@ -74,8 +74,8 @@ export function SettingsPanel() {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="flex items-center gap-2 bg-gradient-to-r from-background to-background/95 backdrop-blur-sm transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg active:scale-95 hover:ring-2 hover:ring-primary/20 focus:ring-2 focus:ring-primary/20">
-          <Settings className="size-4 drop-shadow-sm text-foreground" />
+        <Button variant="outline" size="sm" className="flex items-center gap-2 bg-gradient-to-r from-background to-background/95 backdrop-blur-sm transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg active:scale-95 hover:ring-2 hover:ring-primary/20 focus:ring-2 focus:ring-primary/20 hover:bg-gradient-to-r hover:from-primary/5 hover:to-accent/5 group relative overflow-hidden">
+          <Settings className="size-4 drop-shadow-sm text-foreground group-hover:rotate-12 transition-transform duration-300" />
           Settings
         </Button>
       </DialogTrigger>
@@ -174,9 +174,9 @@ export function SettingsPanel() {
               <Button
                 variant="outline"
                 onClick={resetSettings}
-                className="flex items-center gap-2 bg-gradient-to-r from-background to-background/95 backdrop-blur-sm transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg active:scale-95 hover:ring-2 hover:ring-primary/20 focus:ring-2 focus:ring-primary/20"
+                className="flex items-center gap-2 bg-gradient-to-r from-background to-background/95 backdrop-blur-sm transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg active:scale-95 hover:ring-2 hover:ring-destructive/20 focus:ring-2 focus:ring-destructive/20 hover:bg-gradient-to-r hover:from-destructive/5 hover:to-destructive/10 group relative overflow-hidden"
               >
-                <RotateCcw className="size-4 text-foreground" />
+                <RotateCcw className="size-4 text-foreground group-hover:rotate-180 transition-transform duration-300" />
                 Reset Settings
               </Button>
               <p className="text-sm text-muted-foreground">

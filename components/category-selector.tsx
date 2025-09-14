@@ -65,7 +65,7 @@ export function CategorySelector({ selectedCategory, onCategoryChange }: Categor
       <Button
         variant={isSelected ? "default" : "outline"}
         onClick={() => onCategoryChange(category)}
-        className="h-auto p-5 flex flex-col items-center gap-3 text-center transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-xl active:scale-95"
+        className="h-auto p-5 flex flex-col items-center gap-3 text-center transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl active:scale-95 hover:ring-2 hover:ring-primary/20 focus:ring-2 focus:ring-primary/20 group relative overflow-hidden"
       >
         <Icon className="size-7 transition-transform duration-200 group-hover:scale-110" />
         <div className="space-y-1">
