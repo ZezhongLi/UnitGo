@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { CategorySelector } from "@/components/category-selector"
 import { UnitConverter } from "@/components/unit-converter"
 import { BatchConverter } from "@/components/batch-converter"
@@ -11,6 +11,7 @@ import { storageManager } from "@/lib/storage"
 import { conversionEngine } from "@/lib/conversion-engine"
 
 export default function HomePage() {
+  const unitConverterRef = useRef<HTMLDivElement>(null)
   const [selectedCategory, setSelectedCategory] = useState<string>("length")
   const [converterProps, setConverterProps] = useState<{
     initialFromUnit?: string
@@ -36,10 +37,22 @@ export default function HomePage() {
     conversionEngine.setDataSizeMode(settings.dataSizeMode)
   }, [])
 
+  // Scroll to unit converter section
+  const scrollToConverter = () => {
+    if (unitConverterRef.current) {
+      unitConverterRef.current.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+      })
+    }
+  }
+
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category)
     // Clear converter props when category changes manually (not from shortcuts)
     setConverterProps({})
+    // Scroll to converter after a brief delay to allow state update
+    setTimeout(scrollToConverter, 100)
   }
 
   const handleUnitSelect = (unitId: string, category: string) => {
@@ -47,6 +60,8 @@ export default function HomePage() {
       setSelectedCategory(category)
     }
     // The unit will be available for selection in the converter
+    // Scroll to converter after a brief delay to allow state update
+    setTimeout(scrollToConverter, 100)
   }
 
 
@@ -59,6 +74,8 @@ export default function HomePage() {
       initialValue: shortcut.value.toString(),
       key: `shortcut-${Date.now()}` // Force re-mount to ensure fresh state
     })
+    // Scroll to converter after a brief delay to allow state update
+    setTimeout(scrollToConverter, 100)
   }
 
 
@@ -83,7 +100,9 @@ export default function HomePage() {
             <CategorySelector selectedCategory={selectedCategory} onCategoryChange={handleCategoryChange} />
 
             {/* Main Converter */}
-            {selectedCategory && <UnitConverter key={converterProps.key || selectedCategory} selectedCategory={selectedCategory} initialFromUnit={converterProps.initialFromUnit} initialToUnit={converterProps.initialToUnit} initialValue={converterProps.initialValue} onStateChange={setConverterState} />}
+            <div ref={unitConverterRef}>
+              {selectedCategory && <UnitConverter key={converterProps.key || selectedCategory} selectedCategory={selectedCategory} initialFromUnit={converterProps.initialFromUnit} initialToUnit={converterProps.initialToUnit} initialValue={converterProps.initialValue} onStateChange={setConverterState} />}
+            </div>
 
             {/* Batch Converter */}
             {selectedCategory && <BatchConverter selectedCategory={selectedCategory} converterState={converterState} />}
