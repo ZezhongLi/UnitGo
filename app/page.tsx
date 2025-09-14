@@ -7,6 +7,7 @@ import { BatchConverter } from "@/components/batch-converter"
 import { ConversionShortcuts } from "@/components/conversion-shortcuts"
 import { UnitSearch } from "@/components/unit-search"
 import { SettingsPanel } from "@/components/settings-panel"
+import { Separator } from "@/components/ui/separator"
 import { storageManager } from "@/lib/storage"
 import { conversionEngine } from "@/lib/conversion-engine"
 
@@ -93,25 +94,34 @@ export default function HomePage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16">
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-10">
+          <div className="lg:col-span-2 space-y-12">
             {/* Category Selection */}
             <CategorySelector selectedCategory={selectedCategory} onCategoryChange={handleCategoryChange} />
 
+            {/* Separator */}
+            <Separator className="my-8 bg-gradient-to-r from-transparent via-border to-transparent h-px" />
+
             {/* Main Converter */}
-            <div ref={unitConverterRef}>
+            <div ref={unitConverterRef} className="relative">
               {selectedCategory && <UnitConverter key={converterProps.key || selectedCategory} selectedCategory={selectedCategory} initialFromUnit={converterProps.initialFromUnit} initialToUnit={converterProps.initialToUnit} initialValue={converterProps.initialValue} onStateChange={setConverterState} />}
             </div>
+
+            {/* Separator */}
+            {selectedCategory && <Separator className="my-8 bg-gradient-to-r from-transparent via-border to-transparent h-px" />}
 
             {/* Batch Converter */}
             {selectedCategory && <BatchConverter selectedCategory={selectedCategory} converterState={converterState} />}
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-8">
+          <div className="space-y-8 lg:border-l lg:border-border/50 lg:pl-8">
             {/* Unit Search */}
             <UnitSearch onUnitSelect={handleUnitSelect} />
+
+            {/* Separator */}
+            <Separator className="my-6 bg-gradient-to-r from-transparent via-border to-transparent h-px" />
 
             {/* Conversion Shortcuts */}
             <ConversionShortcuts onShortcutSelect={handleShortcutSelect} />
