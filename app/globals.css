@@ -16,7 +16,7 @@
   --secondary-foreground: 0 0% 100%;
   --muted: 210 40% 98%;
   --muted-foreground: 215 25% 27%;
-  --accent: 158 84% 15%;
+  --accent: 158 84% 25%;
   --accent-foreground: 0 0% 100%;
   --destructive: 20 91% 48%;
   --destructive-foreground: 0 0% 100%;
@@ -52,7 +52,7 @@
   --secondary-foreground: 0 0% 100%;
   --muted: 215 28% 17%;
   --muted-foreground: 215 20% 65%;
-  --accent: 158 84% 15%;
+  --accent: 158 84% 25%;
   --accent-foreground: 0 0% 100%;
   --destructive: 25 95% 53%;
   --destructive-foreground: 0 0% 100%;
@@ -132,5 +132,10 @@
   
   .hover-accent-subtle {
     @apply hover:bg-muted/50 hover:text-foreground transition-colors;
+  }
+  
+  /* Override button hover states for better visibility */
+  .category-button-hover {
+    @apply hover:bg-primary/10 hover:text-foreground hover:border-primary/30 transition-colors;
   }
 }
