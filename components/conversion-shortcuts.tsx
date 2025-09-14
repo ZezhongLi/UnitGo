@@ -85,7 +85,7 @@ export function ConversionShortcuts({ onShortcutSelect }: ConversionShortcutsPro
             variant="outline"
             size="sm"
             onClick={() => onShortcutSelect(shortcut)}
-            className="h-auto p-3 flex flex-col items-start gap-1 text-left"
+            className="h-auto p-3 flex flex-col items-start gap-1 text-left transition-all duration-200 ease-in-out hover:scale-[1.02] hover:shadow-md hover:border-primary/40 active:scale-95"
           >
             <span className="font-medium text-sm">{shortcut.label}</span>
             <span className="text-xs text-muted-foreground">{shortcut.description}</span>

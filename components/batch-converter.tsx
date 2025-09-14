@@ -122,7 +122,7 @@ export function BatchConverter({ selectedCategory, converterState }: BatchConver
 
   if (!showBatch) {
     return (
-      <Card className="p-6 border-2 border-dashed border-primary/20 hover:border-primary/40 transition-colors bg-gradient-to-r from-primary/5 to-accent/5">
+      <Card className="p-6 border-2 border-dashed border-primary/20 hover:border-primary/40 transition-all duration-300 ease-in-out bg-gradient-to-r from-primary/5 to-accent/5 hover:shadow-lg">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-primary/10">
@@ -231,7 +231,7 @@ export function BatchConverter({ selectedCategory, converterState }: BatchConver
                 size="sm"
                 onClick={() => toggleUnitSelection(unit.id)}
                 disabled={isFromUnit}
-                className="justify-start h-auto p-3"
+                className="justify-start h-auto p-3 transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-md active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
               >
                 <div className="flex flex-col items-start">
                   <span className="font-medium text-sm">{unit.name}</span>
@@ -263,7 +263,7 @@ export function BatchConverter({ selectedCategory, converterState }: BatchConver
 
           <div className="grid gap-3">
             {results.map((result, index) => (
-              <div key={result.unit.id} className="flex items-center justify-between p-4 rounded-lg border bg-muted/30">
+              <div key={result.unit.id} className="flex items-center justify-between p-4 rounded-lg border bg-muted/30 transition-all duration-200 ease-in-out hover:shadow-md hover:bg-muted/50">
                 <div className="flex items-center gap-4">
                   <div className="text-lg font-mono">
                     <span className="font-semibold text-primary">{result.formatted}</span>
@@ -275,7 +275,7 @@ export function BatchConverter({ selectedCategory, converterState }: BatchConver
                   variant="ghost"
                   size="sm"
                   onClick={() => copyResult(result, index)}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 transition-all duration-200 ease-in-out hover:bg-primary/10 hover:scale-110 active:scale-95"
                 >
                   {copiedIndex === index ? <Check className="size-4 text-green-600" /> : <Copy className="size-4" />}
                 </Button>

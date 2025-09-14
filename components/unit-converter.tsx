@@ -255,9 +255,9 @@ export function UnitConverter({ selectedCategory, initialFromUnit, initialToUnit
   )
 
   return (
-    <Card className="p-8 space-y-8 bg-gradient-to-br from-background to-muted/20 border-2 shadow-lg">
+    <Card className="p-8 space-y-8 bg-gradient-to-br from-background to-muted/20 border-2 shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out">
       <div className="space-y-6">
-        <h2 className="text-3xl font-bold text-center bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+        <h2 className="text-3xl font-bold text-center bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent animate-in fade-in-50 duration-700">
           Unit Converter
         </h2>
 
@@ -288,7 +288,7 @@ export function UnitConverter({ selectedCategory, initialFromUnit, initialToUnit
                     }}
                     onFocus={() => setActiveInput("from")}
                     placeholder="Enter value"
-                    className="text-xl h-14 px-4 border-2 border-primary/20 focus:border-primary shadow-md bg-background/80 backdrop-blur-sm"
+                    className="text-xl h-14 px-4 border-2 border-primary/20 focus:border-primary shadow-md bg-background/80 backdrop-blur-sm transition-all duration-200 ease-in-out hover:border-primary/40 focus:shadow-lg focus:scale-[1.02]"
                   />
                   {fromUnit && (
                     <div className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium text-muted-foreground bg-background/80 px-2 py-1 rounded">
@@ -298,7 +298,7 @@ export function UnitConverter({ selectedCategory, initialFromUnit, initialToUnit
                 </div>
               )}
               <Select value={fromUnit} onValueChange={setFromUnit}>
-                <SelectTrigger className="h-12 border-2 border-primary/20 focus:border-primary shadow-md">
+                <SelectTrigger className="h-12 border-2 border-primary/20 focus:border-primary shadow-md transition-all duration-200 ease-in-out hover:border-primary/40 hover:shadow-lg">
                   <SelectValue placeholder="Select unit" />
                 </SelectTrigger>
                 <SelectContent>
@@ -319,9 +319,9 @@ export function UnitConverter({ selectedCategory, initialFromUnit, initialToUnit
               size="icon"
               onClick={handleSwapUnits}
               disabled={!fromUnit || !toUnit}
-              className="rounded-full h-14 w-14 border-2 border-primary/30 hover:border-primary shadow-lg hover:shadow-xl transition-all duration-200 bg-background/80 backdrop-blur-sm"
+              className="rounded-full h-14 w-14 border-2 border-primary/30 hover:border-primary shadow-lg hover:shadow-xl transition-all duration-200 bg-background/80 backdrop-blur-sm hover:scale-110 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
-              <ArrowLeftRight className="size-6" />
+              <ArrowLeftRight className="size-6 transition-transform duration-200 group-hover:rotate-180" />
             </Button>
           </div>
 
@@ -350,7 +350,7 @@ export function UnitConverter({ selectedCategory, initialFromUnit, initialToUnit
                     }}
                     onFocus={() => setActiveInput("to")}
                     placeholder="Enter value"
-                    className="text-xl h-14 px-4 border-2 border-primary/20 focus:border-primary shadow-md bg-background/80 backdrop-blur-sm"
+                    className="text-xl h-14 px-4 border-2 border-primary/20 focus:border-primary shadow-md bg-background/80 backdrop-blur-sm transition-all duration-200 ease-in-out hover:border-primary/40 focus:shadow-lg focus:scale-[1.02]"
                   />
                   {toUnit && (
                     <div className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium text-muted-foreground bg-background/80 px-2 py-1 rounded">
@@ -360,7 +360,7 @@ export function UnitConverter({ selectedCategory, initialFromUnit, initialToUnit
                 </div>
               )}
               <Select value={toUnit} onValueChange={setToUnit}>
-                <SelectTrigger className="h-12 border-2 border-primary/20 focus:border-primary shadow-md">
+                <SelectTrigger className="h-12 border-2 border-primary/20 focus:border-primary shadow-md transition-all duration-200 ease-in-out hover:border-primary/40 hover:shadow-lg">
                   <SelectValue placeholder="Select unit" />
                 </SelectTrigger>
                 <SelectContent>
@@ -377,7 +377,7 @@ export function UnitConverter({ selectedCategory, initialFromUnit, initialToUnit
 
         {/* Conversion Display */}
         {result && (
-          <div className="text-center p-6 bg-gradient-to-r from-primary/10 to-primary/5 rounded-xl border border-primary/20 shadow-md">
+          <div className="text-center p-6 bg-gradient-to-r from-primary/10 to-primary/5 rounded-xl border border-primary/20 shadow-md animate-in slide-in-from-bottom-4 duration-500 ease-out">
             <div className="text-xl font-medium">
               {/* From value display */}
               {units.find(u => u.id === fromUnit)?.isComposite ? (
