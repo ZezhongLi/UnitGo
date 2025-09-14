@@ -65,7 +65,7 @@ export function CategorySelector({ selectedCategory, onCategoryChange }: Categor
       <Button
         variant={isSelected ? "default" : "outline"}
         onClick={() => onCategoryChange(category)}
-        className="h-auto p-5 flex flex-col items-center gap-3 text-center transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-lg active:scale-95"
+        className="h-auto p-5 flex flex-col items-center gap-3 text-center transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-xl active:scale-95"
       >
         <Icon className="size-7 transition-transform duration-200 group-hover:scale-110" />
         <div className="space-y-1">
@@ -79,8 +79,8 @@ export function CategorySelector({ selectedCategory, onCategoryChange }: Categor
   return (
     <div className="space-y-8">
       {/* Everyday Categories */}
-      <Card className="p-8">
-        <h3 className="text-2xl font-bold mb-6 tracking-wide">Everyday Units</h3>
+      <Card className="p-8 bg-gradient-to-br from-background via-background to-muted/20 border-2 border-primary/10 shadow-xl hover:shadow-2xl transition-all duration-300 ease-in-out backdrop-blur-sm">
+        <h3 className="text-2xl font-bold mb-6 tracking-wide bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent drop-shadow-sm">Everyday Units</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {everydayCategories.map((category) => (
             <CategoryButton key={category} category={category} />
@@ -89,8 +89,8 @@ export function CategorySelector({ selectedCategory, onCategoryChange }: Categor
       </Card>
 
       {/* Technical Categories */}
-      <Card className="p-8">
-        <h3 className="text-2xl font-bold mb-6 tracking-wide">Technical Units</h3>
+      <Card className="p-8 bg-gradient-to-br from-background via-background to-muted/20 border-2 border-primary/10 shadow-xl hover:shadow-2xl transition-all duration-300 ease-in-out backdrop-blur-sm">
+        <h3 className="text-2xl font-bold mb-6 tracking-wide bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent drop-shadow-sm">Technical Units</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {technicalCategories.map((category) => (
             <CategoryButton key={category} category={category} />

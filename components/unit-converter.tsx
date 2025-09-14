@@ -255,9 +255,9 @@ export function UnitConverter({ selectedCategory, initialFromUnit, initialToUnit
   )
 
   return (
-    <Card className="p-10 space-y-10 bg-gradient-to-br from-background to-muted/20 border-2 shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out">
+    <Card className="p-10 space-y-10 bg-gradient-to-br from-background via-background to-muted/30 border-2 border-primary/10 shadow-2xl hover:shadow-3xl transition-all duration-300 ease-in-out backdrop-blur-sm">
       <div className="space-y-8">
-        <h2 className="text-4xl font-bold text-center bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent animate-in fade-in-50 duration-700 tracking-tight">
+        <h2 className="text-4xl font-bold text-center bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent animate-in fade-in-50 duration-700 tracking-tight drop-shadow-sm">
           Unit Converter
         </h2>
 
@@ -288,7 +288,7 @@ export function UnitConverter({ selectedCategory, initialFromUnit, initialToUnit
                     }}
                     onFocus={() => setActiveInput("from")}
                     placeholder="Enter value"
-                    className="text-xl h-14 px-4 border-2 border-primary/20 focus:border-primary shadow-md bg-background/80 backdrop-blur-sm transition-all duration-200 ease-in-out hover:border-primary/40 focus:shadow-lg focus:scale-[1.02]"
+                    className="text-xl h-14 px-4 border-2 border-primary/20 focus:border-primary shadow-lg bg-gradient-to-r from-background to-background/95 backdrop-blur-sm transition-all duration-200 ease-in-out hover:border-primary/40 hover:shadow-xl focus:shadow-2xl focus:scale-[1.02]"
                   />
                   {fromUnit && (
                     <div className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium text-muted-foreground bg-background/80 px-2 py-1 rounded">
@@ -298,7 +298,7 @@ export function UnitConverter({ selectedCategory, initialFromUnit, initialToUnit
                 </div>
               )}
               <Select value={fromUnit} onValueChange={setFromUnit}>
-                <SelectTrigger className="h-12 border-2 border-primary/20 focus:border-primary shadow-md transition-all duration-200 ease-in-out hover:border-primary/40 hover:shadow-lg">
+                <SelectTrigger className="h-12 border-2 border-primary/20 focus:border-primary shadow-lg bg-gradient-to-r from-background to-background/95 backdrop-blur-sm transition-all duration-200 ease-in-out hover:border-primary/40 hover:shadow-xl focus:shadow-2xl">
                   <SelectValue placeholder="Select unit" />
                 </SelectTrigger>
                 <SelectContent>
@@ -319,9 +319,9 @@ export function UnitConverter({ selectedCategory, initialFromUnit, initialToUnit
               size="icon"
               onClick={handleSwapUnits}
               disabled={!fromUnit || !toUnit}
-              className="rounded-full h-14 w-14 border-2 border-primary/30 hover:border-primary shadow-lg hover:shadow-xl transition-all duration-200 bg-background/80 backdrop-blur-sm hover:scale-110 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+              className="rounded-full h-14 w-14 border-2 border-primary/30 hover:border-primary shadow-xl bg-gradient-to-br from-background to-background/90 backdrop-blur-sm hover:shadow-2xl transition-all duration-200 hover:scale-110 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
-              <ArrowLeftRight className="size-6 transition-transform duration-200 group-hover:rotate-180" />
+              <ArrowLeftRight className="size-6 transition-transform duration-200 group-hover:rotate-180 text-foreground" />
             </Button>
           </div>
 
@@ -350,7 +350,7 @@ export function UnitConverter({ selectedCategory, initialFromUnit, initialToUnit
                     }}
                     onFocus={() => setActiveInput("to")}
                     placeholder="Enter value"
-                    className="text-xl h-14 px-4 border-2 border-primary/20 focus:border-primary shadow-md bg-background/80 backdrop-blur-sm transition-all duration-200 ease-in-out hover:border-primary/40 focus:shadow-lg focus:scale-[1.02]"
+                    className="text-xl h-14 px-4 border-2 border-primary/20 focus:border-primary shadow-lg bg-gradient-to-r from-background to-background/95 backdrop-blur-sm transition-all duration-200 ease-in-out hover:border-primary/40 hover:shadow-xl focus:shadow-2xl focus:scale-[1.02]"
                   />
                   {toUnit && (
                     <div className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium text-muted-foreground bg-background/80 px-2 py-1 rounded">
@@ -360,7 +360,7 @@ export function UnitConverter({ selectedCategory, initialFromUnit, initialToUnit
                 </div>
               )}
               <Select value={toUnit} onValueChange={setToUnit}>
-                <SelectTrigger className="h-12 border-2 border-primary/20 focus:border-primary shadow-md transition-all duration-200 ease-in-out hover:border-primary/40 hover:shadow-lg">
+                <SelectTrigger className="h-12 border-2 border-primary/20 focus:border-primary shadow-lg bg-gradient-to-r from-background to-background/95 backdrop-blur-sm transition-all duration-200 ease-in-out hover:border-primary/40 hover:shadow-xl focus:shadow-2xl">
                   <SelectValue placeholder="Select unit" />
                 </SelectTrigger>
                 <SelectContent>
@@ -377,7 +377,7 @@ export function UnitConverter({ selectedCategory, initialFromUnit, initialToUnit
 
         {/* Conversion Display */}
         {result && (
-          <div className="text-center p-8 bg-gradient-to-r from-primary/10 to-primary/5 rounded-xl border border-primary/20 shadow-md animate-in slide-in-from-bottom-4 duration-500 ease-out">
+          <div className="text-center p-8 bg-gradient-to-r from-primary/15 via-primary/10 to-accent/10 rounded-xl border border-primary/30 shadow-2xl animate-in slide-in-from-bottom-4 duration-500 ease-out backdrop-blur-sm">
             <div className="text-2xl font-medium">
               {/* From value display */}
               {units.find(u => u.id === fromUnit)?.isComposite ? (

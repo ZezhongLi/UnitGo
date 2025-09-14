@@ -71,11 +71,11 @@ const commonShortcuts: ConversionShortcut[] = [
 
 export function ConversionShortcuts({ onShortcutSelect }: ConversionShortcutsProps) {
   return (
-    <Card className="p-8">
+    <Card className="p-8 bg-gradient-to-br from-background via-background to-muted/20 border-2 border-primary/10 shadow-xl hover:shadow-2xl transition-all duration-300 ease-in-out backdrop-blur-sm">
       <div className="flex items-center gap-3 mb-6">
-        <Zap className="size-6 text-accent" />
-        <h3 className="text-2xl font-bold tracking-wide">Quick Conversions</h3>
-        <Badge variant="outline" className="text-sm">Common examples</Badge>
+        <Zap className="size-6 text-accent drop-shadow-sm dark:text-accent" />
+        <h3 className="text-2xl font-bold tracking-wide bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent drop-shadow-sm">Quick Conversions</h3>
+        <Badge variant="outline" className="text-sm shadow-md">Common examples</Badge>
       </div>
 
       <div className="grid grid-cols-1 gap-3">
@@ -85,7 +85,7 @@ export function ConversionShortcuts({ onShortcutSelect }: ConversionShortcutsPro
             variant="outline"
             size="sm"
             onClick={() => onShortcutSelect(shortcut)}
-            className="h-auto p-4 flex flex-col items-start gap-2 text-left transition-all duration-200 ease-in-out hover:scale-[1.02] hover:shadow-md hover:border-primary/40 active:scale-95"
+            className="h-auto p-4 flex flex-col items-start gap-2 text-left transition-all duration-200 ease-in-out hover:scale-[1.02] hover:shadow-lg hover:border-primary/40 active:scale-95 bg-gradient-to-r from-background to-background/95 backdrop-blur-sm"
           >
             <span className="font-semibold text-base">{shortcut.label}</span>
             <span className="text-sm text-muted-foreground leading-tight">{shortcut.description}</span>

@@ -74,8 +74,8 @@ export function SettingsPanel() {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="flex items-center gap-2 bg-transparent transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-md active:scale-95">
-          <Settings className="size-4" />
+        <Button variant="outline" size="sm" className="flex items-center gap-2 bg-gradient-to-r from-background to-background/95 backdrop-blur-sm transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-lg active:scale-95">
+          <Settings className="size-4 drop-shadow-sm text-foreground" />
           Settings
         </Button>
       </DialogTrigger>
@@ -174,9 +174,9 @@ export function SettingsPanel() {
               <Button
                 variant="outline"
                 onClick={resetSettings}
-                className="flex items-center gap-2 bg-transparent transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-md active:scale-95"
+                className="flex items-center gap-2 bg-gradient-to-r from-background to-background/95 backdrop-blur-sm transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-lg active:scale-95"
               >
-                <RotateCcw className="size-4" />
+                <RotateCcw className="size-4 text-foreground" />
                 Reset Settings
               </Button>
               <p className="text-sm text-muted-foreground">

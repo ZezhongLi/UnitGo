@@ -122,14 +122,14 @@ export function BatchConverter({ selectedCategory, converterState }: BatchConver
 
   if (!showBatch) {
     return (
-      <Card className="p-8 border-2 border-dashed border-primary/20 hover:border-primary/40 transition-all duration-300 ease-in-out bg-gradient-to-r from-primary/5 to-accent/5 hover:shadow-lg">
+      <Card className="p-8 border-2 border-dashed border-primary/20 hover:border-primary/40 transition-all duration-300 ease-in-out bg-gradient-to-r from-primary/10 via-primary/5 to-accent/10 hover:shadow-2xl backdrop-blur-sm">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="p-3 rounded-lg bg-primary/10">
-              <List className="size-6 text-primary" />
+            <div className="p-3 rounded-lg bg-gradient-to-br from-primary/20 to-primary/10 shadow-lg">
+              <List className="size-6 text-primary drop-shadow-sm dark:text-primary" />
             </div>
             <div>
-              <h3 className="text-2xl font-bold tracking-wide">Batch Conversion</h3>
+              <h3 className="text-2xl font-bold tracking-wide bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent drop-shadow-sm">Batch Conversion</h3>
               <p className="text-base text-muted-foreground">Convert to multiple units at once</p>
             </div>
           </div>
@@ -158,14 +158,14 @@ export function BatchConverter({ selectedCategory, converterState }: BatchConver
   }
 
   return (
-    <Card className="p-8 space-y-8 border-2 border-primary/30 bg-gradient-to-r from-primary/5 to-accent/5">
+    <Card className="p-8 space-y-8 border-2 border-primary/30 bg-gradient-to-r from-primary/10 via-primary/5 to-accent/10 shadow-2xl backdrop-blur-sm">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <div className="p-3 rounded-lg bg-primary/10">
-            <List className="size-6 text-primary" />
+          <div className="p-3 rounded-lg bg-gradient-to-br from-primary/20 to-primary/10 shadow-lg">
+            <List className="size-6 text-primary drop-shadow-sm dark:text-primary" />
           </div>
           <div>
-            <h3 className="text-2xl font-bold tracking-wide">Batch Conversion</h3>
+            <h3 className="text-2xl font-bold tracking-wide bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent drop-shadow-sm">Batch Conversion</h3>
             <p className="text-base text-muted-foreground">Active - Converting to multiple units</p>
           </div>
         </div>
@@ -184,7 +184,7 @@ export function BatchConverter({ selectedCategory, converterState }: BatchConver
       </div>
 
       {/* Current Value Display */}
-      <div className="p-6 bg-muted/30 rounded-lg border">
+      <div className="p-6 bg-gradient-to-r from-muted/40 to-muted/20 rounded-lg border shadow-lg backdrop-blur-sm">
         <div className="flex items-center justify-between">
           <div className="text-base text-muted-foreground">Converting from:</div>
           <div className="text-right">
@@ -256,14 +256,14 @@ export function BatchConverter({ selectedCategory, converterState }: BatchConver
               onClick={copyAllResults}
               className="flex items-center gap-2 bg-transparent"
             >
-              {copiedIndex === -1 ? <Check className="size-4 text-green-600" /> : <Copy className="size-4" />}
+              {copiedIndex === -1 ? <Check className="size-4 text-green-600" /> : <Copy className="size-4 text-foreground" />}
               Copy All
             </Button>
           </div>
 
           <div className="grid gap-4">
             {results.map((result, index) => (
-              <div key={result.unit.id} className="flex items-center justify-between p-6 rounded-lg border bg-muted/30 transition-all duration-200 ease-in-out hover:shadow-md hover:bg-muted/50">
+              <div key={result.unit.id} className="flex items-center justify-between p-6 rounded-lg border bg-gradient-to-r from-muted/40 to-muted/20 shadow-lg transition-all duration-200 ease-in-out hover:shadow-xl hover:bg-gradient-to-r hover:from-muted/50 hover:to-muted/30 backdrop-blur-sm">
                 <div className="flex items-center gap-6">
                   <div className="text-xl font-mono">
                     <span className="font-bold text-primary">{result.formatted}</span>
@@ -277,14 +277,14 @@ export function BatchConverter({ selectedCategory, converterState }: BatchConver
                   onClick={() => copyResult(result, index)}
                   className="flex items-center gap-2 transition-all duration-200 ease-in-out hover:bg-primary/10 hover:scale-110 active:scale-95"
                 >
-                  {copiedIndex === index ? <Check className="size-4 text-green-600" /> : <Copy className="size-4" />}
+                  {copiedIndex === index ? <Check className="size-4 text-green-600" /> : <Copy className="size-4 text-foreground" />}
                 </Button>
               </div>
             ))}
           </div>
 
           {/* Summary */}
-          <div className="p-6 bg-primary/5 rounded-lg border border-primary/20">
+          <div className="p-6 bg-gradient-to-r from-primary/15 via-primary/10 to-accent/10 rounded-lg border border-primary/30 shadow-xl backdrop-blur-sm">
             <div className="text-center text-base">
               <span className="font-semibold">
                 {units.find(u => u.id === fromUnit)?.isComposite ? 
