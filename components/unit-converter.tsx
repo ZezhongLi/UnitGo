@@ -288,18 +288,18 @@ export function UnitConverter({ selectedCategory, initialFromUnit, initialToUnit
                     }}
                     onFocus={() => setActiveInput("from")}
                     placeholder="Enter value"
-                    className="text-xl h-14 px-4 border-2 border-primary/20 focus:border-primary shadow-lg bg-gradient-to-r from-background to-background/95 backdrop-blur-sm transition-all duration-200 ease-in-out hover:border-primary/40 hover:shadow-xl focus:shadow-2xl focus:scale-[1.02]"
+                    className="text-xl h-14 px-4 border-2 border-primary/20 focus:border-primary shadow-lg bg-gradient-to-r from-background to-background/95 backdrop-blur-sm transition-all duration-300 ease-in-out hover:border-primary/40 hover:shadow-xl focus:shadow-2xl focus:scale-[1.02] focus:ring-2 focus:ring-primary/20 placeholder:text-muted-foreground/60 placeholder:transition-all placeholder:duration-200 focus:placeholder:text-muted-foreground/40"
                   />
                   {fromUnit && (
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium text-muted-foreground bg-background/80 px-2 py-1 rounded">
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-primary bg-gradient-to-r from-primary/10 to-primary/5 px-3 py-1.5 rounded-md border border-primary/20 shadow-sm transition-all duration-200 ease-in-out">
                       {units.find((u) => u.id === fromUnit)?.symbol}
                     </div>
                   )}
                 </div>
               )}
               <Select value={fromUnit} onValueChange={setFromUnit}>
-                <SelectTrigger className="h-12 border-2 border-primary/20 focus:border-primary shadow-lg bg-gradient-to-r from-background to-background/95 backdrop-blur-sm transition-all duration-200 ease-in-out hover:border-primary/40 hover:shadow-xl focus:shadow-2xl">
-                  <SelectValue placeholder="Select unit" />
+                <SelectTrigger className="h-12 border-2 border-primary/20 focus:border-primary shadow-lg bg-gradient-to-r from-background to-background/95 backdrop-blur-sm transition-all duration-300 ease-in-out hover:border-primary/40 hover:shadow-xl focus:shadow-2xl focus:ring-2 focus:ring-primary/20 hover:scale-[1.01] focus:scale-[1.02]">
+                  <SelectValue placeholder="Select unit" className="placeholder:text-muted-foreground/60" />
                 </SelectTrigger>
                 <SelectContent>
                   {units.map((unit) => (
@@ -350,18 +350,18 @@ export function UnitConverter({ selectedCategory, initialFromUnit, initialToUnit
                     }}
                     onFocus={() => setActiveInput("to")}
                     placeholder="Enter value"
-                    className="text-xl h-14 px-4 border-2 border-primary/20 focus:border-primary shadow-lg bg-gradient-to-r from-background to-background/95 backdrop-blur-sm transition-all duration-200 ease-in-out hover:border-primary/40 hover:shadow-xl focus:shadow-2xl focus:scale-[1.02]"
+                    className="text-xl h-14 px-4 border-2 border-primary/20 focus:border-primary shadow-lg bg-gradient-to-r from-background to-background/95 backdrop-blur-sm transition-all duration-300 ease-in-out hover:border-primary/40 hover:shadow-xl focus:shadow-2xl focus:scale-[1.02] focus:ring-2 focus:ring-primary/20 placeholder:text-muted-foreground/60 placeholder:transition-all placeholder:duration-200 focus:placeholder:text-muted-foreground/40"
                   />
                   {toUnit && (
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium text-muted-foreground bg-background/80 px-2 py-1 rounded">
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-primary bg-gradient-to-r from-primary/10 to-primary/5 px-3 py-1.5 rounded-md border border-primary/20 shadow-sm transition-all duration-200 ease-in-out">
                       {units.find((u) => u.id === toUnit)?.symbol}
                     </div>
                   )}
                 </div>
               )}
               <Select value={toUnit} onValueChange={setToUnit}>
-                <SelectTrigger className="h-12 border-2 border-primary/20 focus:border-primary shadow-lg bg-gradient-to-r from-background to-background/95 backdrop-blur-sm transition-all duration-200 ease-in-out hover:border-primary/40 hover:shadow-xl focus:shadow-2xl">
-                  <SelectValue placeholder="Select unit" />
+                <SelectTrigger className="h-12 border-2 border-primary/20 focus:border-primary shadow-lg bg-gradient-to-r from-background to-background/95 backdrop-blur-sm transition-all duration-300 ease-in-out hover:border-primary/40 hover:shadow-xl focus:shadow-2xl focus:ring-2 focus:ring-primary/20 hover:scale-[1.01] focus:scale-[1.02]">
+                  <SelectValue placeholder="Select unit" className="placeholder:text-muted-foreground/60" />
                 </SelectTrigger>
                 <SelectContent>
                   {units.map((unit) => (

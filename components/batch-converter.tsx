@@ -231,7 +231,7 @@ export function BatchConverter({ selectedCategory, converterState }: BatchConver
                 size="sm"
                 onClick={() => toggleUnitSelection(unit.id)}
                 disabled={isFromUnit}
-                className="justify-start h-auto p-4 transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-md active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                className="justify-start h-auto p-4 transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 hover:ring-2 hover:ring-primary/20 focus:ring-2 focus:ring-primary/20"
               >
                 <div className="flex flex-col items-start space-y-1">
                   <span className="font-semibold text-base">{unit.name}</span>
