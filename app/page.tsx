@@ -64,24 +64,23 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
+      <div className="container mx-auto px-6 py-12 max-w-7xl">
         {/* Header */}
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-4 mb-4">
-            <h1 className="text-4xl font-bold text-balance">UnitGo</h1>
+        <div className="text-center mb-12">
+          <div className="flex items-center justify-center gap-6 mb-6">
+            <h1 className="text-5xl font-bold text-balance tracking-tight">UnitGo</h1>
             <SettingsPanel />
           </div>
-          <p className="text-lg text-muted-foreground text-pretty">
+          <p className="text-xl text-muted-foreground text-pretty max-w-2xl mx-auto leading-relaxed">
             Quick conversions between everyday and technical units
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-8">
+          <div className="lg:col-span-2 space-y-10">
             {/* Category Selection */}
             <CategorySelector selectedCategory={selectedCategory} onCategoryChange={handleCategoryChange} />
-
 
             {/* Main Converter */}
             {selectedCategory && <UnitConverter key={converterProps.key || selectedCategory} selectedCategory={selectedCategory} initialFromUnit={converterProps.initialFromUnit} initialToUnit={converterProps.initialToUnit} initialValue={converterProps.initialValue} onStateChange={setConverterState} />}
@@ -91,7 +90,7 @@ export default function HomePage() {
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6">
+          <div className="space-y-8">
             {/* Unit Search */}
             <UnitSearch onUnitSelect={handleUnitSelect} />
 

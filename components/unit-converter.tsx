@@ -255,18 +255,18 @@ export function UnitConverter({ selectedCategory, initialFromUnit, initialToUnit
   )
 
   return (
-    <Card className="p-8 space-y-8 bg-gradient-to-br from-background to-muted/20 border-2 shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out">
-      <div className="space-y-6">
-        <h2 className="text-3xl font-bold text-center bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent animate-in fade-in-50 duration-700">
+    <Card className="p-10 space-y-10 bg-gradient-to-br from-background to-muted/20 border-2 shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out">
+      <div className="space-y-8">
+        <h2 className="text-4xl font-bold text-center bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent animate-in fade-in-50 duration-700 tracking-tight">
           Unit Converter
         </h2>
 
         {/* Input Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
           {/* From Unit */}
-          <div className="space-y-4">
-            <label className="text-lg font-semibold text-foreground">From</label>
-            <div className="space-y-3">
+          <div className="space-y-5">
+            <label className="text-xl font-semibold text-foreground tracking-wide">From</label>
+            <div className="space-y-4">
               {units.find(u => u.id === fromUnit)?.isComposite ? (
                 <DualInput
                   unit={units.find(u => u.id === fromUnit)!}
@@ -326,9 +326,9 @@ export function UnitConverter({ selectedCategory, initialFromUnit, initialToUnit
           </div>
 
           {/* To Unit */}
-          <div className="space-y-4">
-            <label className="text-lg font-semibold text-foreground">To</label>
-            <div className="space-y-3">
+          <div className="space-y-5">
+            <label className="text-xl font-semibold text-foreground tracking-wide">To</label>
+            <div className="space-y-4">
               {units.find(u => u.id === toUnit)?.isComposite ? (
                 <DualInput
                   unit={units.find(u => u.id === toUnit)!}
@@ -377,29 +377,29 @@ export function UnitConverter({ selectedCategory, initialFromUnit, initialToUnit
 
         {/* Conversion Display */}
         {result && (
-          <div className="text-center p-6 bg-gradient-to-r from-primary/10 to-primary/5 rounded-xl border border-primary/20 shadow-md animate-in slide-in-from-bottom-4 duration-500 ease-out">
-            <div className="text-xl font-medium">
+          <div className="text-center p-8 bg-gradient-to-r from-primary/10 to-primary/5 rounded-xl border border-primary/20 shadow-md animate-in slide-in-from-bottom-4 duration-500 ease-out">
+            <div className="text-2xl font-medium">
               {/* From value display */}
               {units.find(u => u.id === fromUnit)?.isComposite ? (
-                <span className="font-bold text-2xl">
+                <span className="font-bold text-3xl">
                   {fromCompositeValues[0] || "0"}' {fromCompositeValues[1] || "0"}"
                 </span>
               ) : (
-                <span className="font-bold text-2xl">{fromValue}</span>
+                <span className="font-bold text-3xl">{fromValue}</span>
               )}
-              <span className="mx-3 text-muted-foreground text-lg">{units.find((u) => u.id === fromUnit)?.symbol}</span>
+              <span className="mx-4 text-muted-foreground text-xl">{units.find((u) => u.id === fromUnit)?.symbol}</span>
               
-              <span className="mx-3 text-2xl">=</span>
+              <span className="mx-4 text-3xl">=</span>
               
               {/* To value display */}
               {units.find(u => u.id === toUnit)?.isComposite ? (
-                <span className="font-bold text-2xl text-primary">
+                <span className="font-bold text-3xl text-primary">
                   {toCompositeValues[0] || "0"}' {toCompositeValues[1] || "0"}"
                 </span>
               ) : (
-                <span className="font-bold text-2xl text-primary">{toValue}</span>
+                <span className="font-bold text-3xl text-primary">{toValue}</span>
               )}
-              <span className="mx-3 text-muted-foreground text-lg">{units.find((u) => u.id === toUnit)?.symbol}</span>
+              <span className="mx-4 text-muted-foreground text-xl">{units.find((u) => u.id === toUnit)?.symbol}</span>
             </div>
           </div>
         )}

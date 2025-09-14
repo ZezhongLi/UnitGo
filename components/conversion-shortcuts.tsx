@@ -71,24 +71,24 @@ const commonShortcuts: ConversionShortcut[] = [
 
 export function ConversionShortcuts({ onShortcutSelect }: ConversionShortcutsProps) {
   return (
-    <Card className="p-6">
-      <div className="flex items-center gap-2 mb-4">
-        <Zap className="size-5 text-accent" />
-        <h3 className="text-lg font-semibold">Quick Conversions</h3>
-        <Badge variant="outline">Common examples</Badge>
+    <Card className="p-8">
+      <div className="flex items-center gap-3 mb-6">
+        <Zap className="size-6 text-accent" />
+        <h3 className="text-2xl font-bold tracking-wide">Quick Conversions</h3>
+        <Badge variant="outline" className="text-sm">Common examples</Badge>
       </div>
 
-      <div className="grid grid-cols-1 gap-2">
+      <div className="grid grid-cols-1 gap-3">
         {commonShortcuts.map((shortcut, index) => (
           <Button
             key={index}
             variant="outline"
             size="sm"
             onClick={() => onShortcutSelect(shortcut)}
-            className="h-auto p-3 flex flex-col items-start gap-1 text-left transition-all duration-200 ease-in-out hover:scale-[1.02] hover:shadow-md hover:border-primary/40 active:scale-95"
+            className="h-auto p-4 flex flex-col items-start gap-2 text-left transition-all duration-200 ease-in-out hover:scale-[1.02] hover:shadow-md hover:border-primary/40 active:scale-95"
           >
-            <span className="font-medium text-sm">{shortcut.label}</span>
-            <span className="text-xs text-muted-foreground">{shortcut.description}</span>
+            <span className="font-semibold text-base">{shortcut.label}</span>
+            <span className="text-sm text-muted-foreground leading-tight">{shortcut.description}</span>
           </Button>
         ))}
       </div>

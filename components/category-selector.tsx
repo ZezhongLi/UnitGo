@@ -65,23 +65,23 @@ export function CategorySelector({ selectedCategory, onCategoryChange }: Categor
       <Button
         variant={isSelected ? "default" : "outline"}
         onClick={() => onCategoryChange(category)}
-        className="h-auto p-4 flex flex-col items-center gap-2 text-center transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-lg active:scale-95"
+        className="h-auto p-5 flex flex-col items-center gap-3 text-center transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-lg active:scale-95"
       >
-        <Icon className="size-6 transition-transform duration-200 group-hover:scale-110" />
-        <div>
-          <div className="font-medium">{config.label}</div>
-          <div className="text-xs text-muted-foreground">{config.description}</div>
+        <Icon className="size-7 transition-transform duration-200 group-hover:scale-110" />
+        <div className="space-y-1">
+          <div className="font-semibold text-base">{config.label}</div>
+          <div className="text-xs text-muted-foreground leading-tight">{config.description}</div>
         </div>
       </Button>
     )
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Everyday Categories */}
-      <Card className="p-6">
-        <h3 className="text-lg font-semibold mb-4">Everyday Units</h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <Card className="p-8">
+        <h3 className="text-2xl font-bold mb-6 tracking-wide">Everyday Units</h3>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {everydayCategories.map((category) => (
             <CategoryButton key={category} category={category} />
           ))}
@@ -89,9 +89,9 @@ export function CategorySelector({ selectedCategory, onCategoryChange }: Categor
       </Card>
 
       {/* Technical Categories */}
-      <Card className="p-6">
-        <h3 className="text-lg font-semibold mb-4">Technical Units</h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <Card className="p-8">
+        <h3 className="text-2xl font-bold mb-6 tracking-wide">Technical Units</h3>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {technicalCategories.map((category) => (
             <CategoryButton key={category} category={category} />
           ))}

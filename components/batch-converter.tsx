@@ -122,15 +122,15 @@ export function BatchConverter({ selectedCategory, converterState }: BatchConver
 
   if (!showBatch) {
     return (
-      <Card className="p-6 border-2 border-dashed border-primary/20 hover:border-primary/40 transition-all duration-300 ease-in-out bg-gradient-to-r from-primary/5 to-accent/5 hover:shadow-lg">
+      <Card className="p-8 border-2 border-dashed border-primary/20 hover:border-primary/40 transition-all duration-300 ease-in-out bg-gradient-to-r from-primary/5 to-accent/5 hover:shadow-lg">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-primary/10">
-              <List className="size-5 text-primary" />
+          <div className="flex items-center gap-4">
+            <div className="p-3 rounded-lg bg-primary/10">
+              <List className="size-6 text-primary" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold">Batch Conversion</h3>
-              <p className="text-sm text-muted-foreground">Convert to multiple units at once</p>
+              <h3 className="text-2xl font-bold tracking-wide">Batch Conversion</h3>
+              <p className="text-base text-muted-foreground">Convert to multiple units at once</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -147,9 +147,9 @@ export function BatchConverter({ selectedCategory, converterState }: BatchConver
         </div>
         
         {/* Preview/teaser content */}
-        <div className="mt-4 pt-4 border-t border-dashed border-primary/20">
-          <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-            <span>💡</span>
+        <div className="mt-6 pt-6 border-t border-dashed border-primary/20">
+          <div className="flex items-center justify-center gap-3 text-base text-muted-foreground">
+            <span className="text-lg">💡</span>
             <span>Perfect for comparing measurements across different units</span>
           </div>
         </div>
@@ -158,15 +158,15 @@ export function BatchConverter({ selectedCategory, converterState }: BatchConver
   }
 
   return (
-    <Card className="p-6 space-y-6 border-2 border-primary/30 bg-gradient-to-r from-primary/5 to-accent/5">
+    <Card className="p-8 space-y-8 border-2 border-primary/30 bg-gradient-to-r from-primary/5 to-accent/5">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-primary/10">
-            <List className="size-5 text-primary" />
+        <div className="flex items-center gap-4">
+          <div className="p-3 rounded-lg bg-primary/10">
+            <List className="size-6 text-primary" />
           </div>
           <div>
-            <h3 className="text-lg font-semibold">Batch Conversion</h3>
-            <p className="text-sm text-muted-foreground">Active - Converting to multiple units</p>
+            <h3 className="text-2xl font-bold tracking-wide">Batch Conversion</h3>
+            <p className="text-base text-muted-foreground">Active - Converting to multiple units</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
@@ -184,11 +184,11 @@ export function BatchConverter({ selectedCategory, converterState }: BatchConver
       </div>
 
       {/* Current Value Display */}
-      <div className="p-4 bg-muted/30 rounded-lg border">
+      <div className="p-6 bg-muted/30 rounded-lg border">
         <div className="flex items-center justify-between">
-          <div className="text-sm text-muted-foreground">Converting from:</div>
+          <div className="text-base text-muted-foreground">Converting from:</div>
           <div className="text-right">
-            <div className="text-lg font-semibold">
+            <div className="text-xl font-semibold">
               {units.find(u => u.id === fromUnit)?.isComposite ? (
                 <span>{fromCompositeValues[0] || "0"}' {fromCompositeValues[1] || "0"}"</span>
               ) : (
@@ -198,7 +198,7 @@ export function BatchConverter({ selectedCategory, converterState }: BatchConver
                 {units.find((u) => u.id === fromUnit)?.symbol}
               </span>
             </div>
-            <div className="text-sm text-muted-foreground">
+            <div className="text-base text-muted-foreground">
               {units.find((u) => u.id === fromUnit)?.name}
             </div>
           </div>
@@ -206,10 +206,10 @@ export function BatchConverter({ selectedCategory, converterState }: BatchConver
       </div>
 
       {/* Unit Selection */}
-      <div className="space-y-4">
+      <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <Label>Convert To (select multiple units)</Label>
-          <div className="flex gap-2">
+          <Label className="text-lg font-semibold">Convert To (select multiple units)</Label>
+          <div className="flex gap-3">
             <Button variant="outline" size="sm" onClick={selectAllUnits}>
               Select All
             </Button>
@@ -219,7 +219,7 @@ export function BatchConverter({ selectedCategory, converterState }: BatchConver
           </div>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
           {units.map((unit) => {
             const isSelected = selectedUnits.has(unit.id)
             const isFromUnit = unit.id === fromUnit
@@ -231,25 +231,25 @@ export function BatchConverter({ selectedCategory, converterState }: BatchConver
                 size="sm"
                 onClick={() => toggleUnitSelection(unit.id)}
                 disabled={isFromUnit}
-                className="justify-start h-auto p-3 transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-md active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                className="justify-start h-auto p-4 transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-md active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
               >
-                <div className="flex flex-col items-start">
-                  <span className="font-medium text-sm">{unit.name}</span>
-                  <span className="text-xs opacity-70">{unit.symbol}</span>
+                <div className="flex flex-col items-start space-y-1">
+                  <span className="font-semibold text-base">{unit.name}</span>
+                  <span className="text-sm opacity-70">{unit.symbol}</span>
                 </div>
               </Button>
             )
           })}
         </div>
 
-        <div className="text-sm text-muted-foreground">Selected {selectedUnits.size} units for batch conversion</div>
+        <div className="text-base text-muted-foreground">Selected {selectedUnits.size} units for batch conversion</div>
       </div>
 
       {/* Results */}
       {results.length > 0 && (
-        <div className="space-y-4">
+        <div className="space-y-6">
           <div className="flex items-center justify-between">
-            <Label>Conversion Results</Label>
+            <Label className="text-lg font-semibold">Conversion Results</Label>
             <Button
               variant="outline"
               size="sm"
@@ -261,15 +261,15 @@ export function BatchConverter({ selectedCategory, converterState }: BatchConver
             </Button>
           </div>
 
-          <div className="grid gap-3">
+          <div className="grid gap-4">
             {results.map((result, index) => (
-              <div key={result.unit.id} className="flex items-center justify-between p-4 rounded-lg border bg-muted/30 transition-all duration-200 ease-in-out hover:shadow-md hover:bg-muted/50">
-                <div className="flex items-center gap-4">
-                  <div className="text-lg font-mono">
-                    <span className="font-semibold text-primary">{result.formatted}</span>
-                    <span className="ml-2 text-muted-foreground">{result.unit.symbol}</span>
+              <div key={result.unit.id} className="flex items-center justify-between p-6 rounded-lg border bg-muted/30 transition-all duration-200 ease-in-out hover:shadow-md hover:bg-muted/50">
+                <div className="flex items-center gap-6">
+                  <div className="text-xl font-mono">
+                    <span className="font-bold text-primary">{result.formatted}</span>
+                    <span className="ml-3 text-muted-foreground">{result.unit.symbol}</span>
                   </div>
-                  <div className="text-sm text-muted-foreground">{result.unit.name}</div>
+                  <div className="text-base text-muted-foreground">{result.unit.name}</div>
                 </div>
                 <Button
                   variant="ghost"
@@ -284,8 +284,8 @@ export function BatchConverter({ selectedCategory, converterState }: BatchConver
           </div>
 
           {/* Summary */}
-          <div className="p-4 bg-primary/5 rounded-lg border border-primary/20">
-            <div className="text-center text-sm">
+          <div className="p-6 bg-primary/5 rounded-lg border border-primary/20">
+            <div className="text-center text-base">
               <span className="font-semibold">
                 {units.find(u => u.id === fromUnit)?.isComposite ? 
                   `${fromCompositeValues[0] || "0"}' ${fromCompositeValues[1] || "0"}"` :
