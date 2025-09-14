@@ -16,7 +16,7 @@
   --secondary-foreground: 0 0% 100%;
   --muted: 210 40% 98%;
   --muted-foreground: 215 25% 27%;
-  --accent: 158 84% 39%;
+  --accent: 158 84% 15%;
   --accent-foreground: 0 0% 100%;
   --destructive: 20 91% 48%;
   --destructive-foreground: 0 0% 100%;
@@ -52,7 +52,7 @@
   --secondary-foreground: 0 0% 100%;
   --muted: 215 28% 17%;
   --muted-foreground: 215 20% 65%;
-  --accent: 158 84% 39%;
+  --accent: 158 84% 15%;
   --accent-foreground: 0 0% 100%;
   --destructive: 25 95% 53%;
   --destructive-foreground: 0 0% 100%;
@@ -121,5 +121,16 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  /* Better hover states for better text visibility */
+  .hover-accent {
+    @apply hover:bg-muted hover:text-foreground transition-colors;
+  }
+  
+  .hover-accent-subtle {
+    @apply hover:bg-muted/50 hover:text-foreground transition-colors;
   }
 }
