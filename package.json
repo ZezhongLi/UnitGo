@@ -1,6 +1,7 @@
 {
   "name": "unitgo",
-  "version": "0.1.0",
+  "version": "1.0.0",
+  "description": "A modern, comprehensive unit conversion application built with Next.js, React, and TypeScript",
   "private": true,
   "scripts": {
     "build": "next build",
