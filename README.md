@@ -18,7 +18,6 @@ A modern, comprehensive unit conversion application built with Next.js, React, a
 - **Data Size Modes**: Support for both SI (1000-based) and binary (1024-based) calculations
 
 ### 🎯 User Experience
-- **Favorites System**: Star your most-used units for quick access
 - **Recent Conversions**: Track and revisit your conversion history
 - **Quick Access Panel**: Fast shortcuts to common conversions
 - **Unit Search**: Find units quickly with intelligent search
@@ -117,7 +116,6 @@ UnitGo/
 │   ├── batch-converter.tsx
 │   ├── category-selector.tsx
 │   ├── conversion-shortcuts.tsx
-│   ├── favorites-panel.tsx
 │   ├── height-converter.tsx
 │   ├── quick-access.tsx
 │   ├── recents-panel.tsx
@@ -170,7 +168,6 @@ UnitGo/
 
 ### Advanced Features
 - **Swap Units**: Click the swap button (↕️) to reverse the conversion
-- **Favorites**: Click the star icon next to any unit to add it to favorites
 - **Batch Conversion**: Use the batch converter to see one value in multiple units
 - **Height Conversion**: Special tool for converting feet + inches to centimeters
 - **Settings**: Adjust precision and data size calculation mode

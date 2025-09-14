@@ -245,7 +245,6 @@ export function UnitConverter({ selectedCategory, initialFromUnit, initialToUnit
     }
   }, [fromUnit, toUnit, fromValue, toValue, fromCompositeValues, toCompositeValues])
 
-
   const UnitSelectItem = ({ unit }: { unit: Unit }) => (
     <div className="flex items-center justify-between w-full">
       <div className="flex flex-col">

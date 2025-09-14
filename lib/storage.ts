@@ -7,7 +7,7 @@ export interface AppSettings {
 }
 
 class StorageManager {
-  private readonly SETTINGS_KEY = "unitsmaster_settings"
+  private readonly SETTINGS_KEY = "unitgo_settings"
 
   // Settings management
   getSettings(): AppSettings {
